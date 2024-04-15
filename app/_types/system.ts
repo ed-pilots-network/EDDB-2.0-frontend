@@ -21,5 +21,5 @@ export interface ISystem {
     z: number;
   };
   eliteId: number;
-  starClass: string;
+  primaryStarClass: string;
 }

@@ -9,28 +9,23 @@ import {
   GridItem,
   Input,
   FormErrorMessage,
-  Checkbox,
 } from '@chakra-ui/react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import GetColor from '@/app/_hooks/colorSelector';
 import {
-  PowersField,
-  AllegiancesField,
-  GovernmentsField,
   LandingPadsField,
   StationTypesField,
   CommoditiesField,
   SystemsField,
 } from '@/app/_components/inputs';
-import CheckboxGroup from '../../form/CheckboxGroup';
 import { useState } from 'react';
 import Select from '../../inputs/form/Select';
 import { ICommodity } from '@/app/_types';
 
 export const SingleTradeRouteFormSchema = z.object({
-  buySystem: z.object({ value: z.number() }).optional(),
+  targetSystem: z.object({ value: z.number() }).optional(),
   buyStation: z.string().optional(),
   sellSystem: z.object({ value: z.number() }).optional(),
   sellStation: z.string().optional(),
@@ -89,8 +84,7 @@ const Form: React.FC<FormProps> = ({
   };
 
   // For demo purposes
-  const [buySystemStations, setBuySystemStations] = useState<string[]>([]);
-  const [sellSystemStations, setSellSystemStations] = useState<string[]>([]);
+  const [buySystemStations, setTargetSystemStations] = useState<string[]>([]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -105,21 +99,21 @@ const Form: React.FC<FormProps> = ({
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.buySystem && errors.buySystem.message)}
+            isInvalid={!!(errors.targetSystem && errors.targetSystem.message)}
           >
-            <FormLabel>Buy from System</FormLabel>
+            <FormLabel>Target System</FormLabel>
             <SystemsField
-              fieldName="buySystem"
+              fieldName="targetSystem"
               control={control}
               placeholder="Select a system..."
               onChange={(newValue) => {
-                setBuySystemStations(
+                setTargetSystemStations(
                   newValue ? ['Station1', 'Station2', 'Station3'] : [],
                 );
               }}
             />
             <FormErrorMessage>
-              {errors.buySystem && errors.buySystem.message}
+              {errors.targetSystem && errors.targetSystem.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -148,55 +142,6 @@ const Form: React.FC<FormProps> = ({
             </Select>
             <FormErrorMessage>
               {errors.buyStation && errors.buyStation.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={{ base: 1, md: 2 }}>
-          <FormControl
-            isInvalid={!!(errors.sellSystem && errors.sellSystem.message)}
-          >
-            <FormLabel>Sell to System</FormLabel>
-            <SystemsField
-              fieldName="sellSystem"
-              control={control}
-              placeholder="Select a system..."
-              onChange={(newValue) => {
-                setSellSystemStations(
-                  newValue ? ['Station1', 'Station2', 'Station3'] : [],
-                );
-              }}
-            />
-            <FormErrorMessage>
-              {errors.sellSystem && errors.sellSystem.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem colSpan={{ base: 1, md: 2 }}>
-          <FormControl
-            isInvalid={!!(errors.sellStation && errors.sellStation.message)}
-          >
-            <FormLabel>Sell to Station</FormLabel>
-            <Select
-              register={register('sellStation', {
-                disabled: sellSystemStations.length === 0,
-              })}
-              placeholder={
-                sellSystemStations.length === 0
-                  ? 'Enter a system first...'
-                  : 'Select a station (optional)'
-              }
-            >
-              {sellSystemStations.length &&
-                sellSystemStations.map((station) => (
-                  <option key={station} value={station}>
-                    {station}
-                  </option>
-                ))}
-            </Select>
-            <FormErrorMessage>
-              {errors.sellStation && errors.sellStation.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -361,30 +306,6 @@ const Form: React.FC<FormProps> = ({
 
         <GridItem>
           <FormControl
-            isInvalid={!!(errors.government && errors.government.message)}
-          >
-            <FormLabel>Government</FormLabel>
-            <GovernmentsField register={register('government')} />
-            <FormErrorMessage>
-              {errors.government && errors.government.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem>
-          <FormControl
-            isInvalid={!!(errors.allegiance && errors.allegiance.message)}
-          >
-            <FormLabel>Allegiance</FormLabel>
-            <AllegiancesField register={register('allegiance')} />
-            <FormErrorMessage>
-              {errors.allegiance && errors.allegiance.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem>
-          <FormControl
             isInvalid={
               !!(
                 errors.maxDistanceToArrival &&
@@ -410,16 +331,6 @@ const Form: React.FC<FormProps> = ({
           </FormControl>
         </GridItem>
 
-        <GridItem>
-          <FormControl isInvalid={!!(errors.power && errors.power.message)}>
-            <FormLabel>Powers</FormLabel>
-            <PowersField register={register('power')} />
-            <FormErrorMessage>
-              {errors.power && errors.power.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl>
             <FormLabel>Station Type</FormLabel>
@@ -438,30 +349,6 @@ const Form: React.FC<FormProps> = ({
             <FormErrorMessage>
               {errors.landingPadSize && errors.landingPadSize.message}
             </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem>
-          <FormControl>
-            <FormLabel>Other Options</FormLabel>
-            <CheckboxGroup>
-              <FormControl
-                isInvalid={
-                  !!(errors.requiresPermit && errors.requiresPermit.message)
-                }
-              >
-                <Checkbox
-                  colorScheme="orange"
-                  {...register('requiresPermit')}
-                  borderColor={GetColor('border')}
-                >
-                  Requires Permit
-                </Checkbox>
-                <FormErrorMessage>
-                  {errors.requiresPermit && errors.requiresPermit.message}
-                </FormErrorMessage>
-              </FormControl>
-            </CheckboxGroup>
           </FormControl>
         </GridItem>
       </Grid>
