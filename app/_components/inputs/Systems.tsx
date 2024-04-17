@@ -49,6 +49,18 @@ const getMockSystemName = async (lookupString: string) => {
   return res.json();
 };
 
+const getSystemName = async (lookupString: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_STAGING_API_URL}/api/v1/exploration/system/by-name-containing?subString=${lookupString}&amount=10`,
+  );
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+
+  return res.json();
+};
+
 const loadOptions = async (inputValue: string): Promise<SelectGroup[] | []> => {
   if (inputValue.length < 3) {
     return [];
@@ -57,8 +69,11 @@ const loadOptions = async (inputValue: string): Promise<SelectGroup[] | []> => {
   try {
     let res = [];
 
-    if (process.env.NODE_ENV === 'development')
+    if (process.env.NODE_ENV === 'development') {
       res = await getMockSystemName(inputValue);
+    } else {
+      res = await getSystemName(inputValue);
+    }
 
     const returnArr: SelectGroup[] = res.map((item: ISystem) => ({
       value: item.eliteId,
