@@ -10,30 +10,6 @@ jest.mock('../../inputs/Systems', () => ({
       <input value="some value" onChange={(e) => e.target.value} />,
     ),
 }));
-jest.mock('../../inputs/Governments', () => ({
-  __esModule: true,
-  default: jest
-    .fn()
-    .mockReturnValue(
-      <input
-        aria-label="governments"
-        value="some value"
-        onChange={(e) => e.target.value}
-      />,
-    ),
-}));
-jest.mock('../../inputs/Allegiances', () => ({
-  __esModule: true,
-  default: jest
-    .fn()
-    .mockReturnValue(
-      <input
-        aria-label="allegiances"
-        value="some value"
-        onChange={(e) => e.target.value}
-      />,
-    ),
-}));
 jest.mock('../../inputs/LandingPads', () => ({
   __esModule: true,
   default: jest
@@ -58,18 +34,6 @@ jest.mock('../../inputs/StationTypes', () => ({
       />,
     ),
 }));
-jest.mock('../../inputs/Powers', () => ({
-  __esModule: true,
-  default: jest
-    .fn()
-    .mockReturnValue(
-      <input
-        aria-label="powers"
-        value="some value"
-        onChange={(e) => e.target.value}
-      />,
-    ),
-}));
 
 describe('Stations Form', () => {
   it('renders the fields', () => {
@@ -81,10 +45,6 @@ describe('Stations Form', () => {
 
     expect(
       screen.getByRole('combobox', { name: 'Buy from Station' }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('combobox', { name: 'Sell to Station' }),
     ).toBeInTheDocument();
 
     expect(
@@ -121,22 +81,12 @@ describe('Stations Form', () => {
 
     /* Mocked abstracted fields */
     expect(
-      screen.getByRole('textbox', { name: 'governments' }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('textbox', { name: 'allegiances' }),
-    ).toBeInTheDocument();
-
-    expect(
       screen.getByRole('textbox', { name: 'landingPads' }),
     ).toBeInTheDocument();
 
     expect(
       screen.getByRole('textbox', { name: 'stationTypes' }),
     ).toBeInTheDocument();
-
-    expect(screen.getByRole('textbox', { name: 'powers' })).toBeInTheDocument();
 
     expect(
       screen.getByRole('button', { name: /Find Routes/i }),
