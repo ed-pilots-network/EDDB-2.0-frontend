@@ -313,10 +313,10 @@ const Form: React.FC<FormProps> = ({
           >
             <FormLabel>Max Price Age</FormLabel>
             <Select register={register('maxPriceAgeHours')}>
-              <option value="12">12 hours</option>
-              <option value="24">1 day</option>
-              <option value="48">2 days</option>
-              <option value="72">3 days</option>
+              <option value={12}>12 hours</option>
+              <option value={24}>1 day</option>
+              <option value={48}>2 days</option>
+              <option value={72}>3 days</option>
             </Select>
             <FormErrorMessage>
               {errors.maxPriceAgeHours && errors.maxPriceAgeHours.message}
