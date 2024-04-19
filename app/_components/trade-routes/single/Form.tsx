@@ -32,7 +32,10 @@ export const SingleTradeRouteFormSchema = z.object({
     .optional()
     .transform((val) => val?.label),
   sellStationName: z.string().optional(),
-  commodityDisplayNames: z.array(z.object({ value: z.string() })).optional(),
+  commodityDisplayName: z
+    .array(z.object({ value: z.string() }))
+    .optional()
+    .transform((val) => val?.map((v) => v.value)),
   maxRouteDistance: z
     .string()
     .optional()
@@ -90,7 +93,7 @@ const Form: React.FC<FormProps> = ({
       buySystemName: data.buySystemName,
       sellSystemName: data.sellSystemName,
     };
-    console.log('submitting form data: ', submitData);
+    console.log('submitting form data: ', data);
     onSubmitHandler(submitData);
   };
 
@@ -223,8 +226,8 @@ const Form: React.FC<FormProps> = ({
           <FormControl
             isInvalid={
               !!(
-                errors.commodityDisplayNames &&
-                errors.commodityDisplayNames.message
+                errors.commodityDisplayName &&
+                errors.commodityDisplayName.message
               )
             }
           >
