@@ -48,7 +48,11 @@ describe('Stations Form', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('spinbutton', { name: 'Max Hop Distance' }),
+      screen.getByRole('combobox', { name: 'Sell to Station' }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole('spinbutton', { name: 'Max Route Distance' }),
     ).toBeInTheDocument();
 
     expect(
@@ -60,19 +64,11 @@ describe('Stations Form', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('spinbutton', { name: 'Min. Supply' }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('spinbutton', { name: 'Min. Demand' }),
-    ).toBeInTheDocument();
-
-    expect(
       screen.getByRole('spinbutton', { name: 'Available Credits' }),
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('spinbutton', { name: 'Max Price Age' }),
+      screen.getByRole('combobox', { name: 'Max Price Age' }),
     ).toBeInTheDocument();
 
     expect(

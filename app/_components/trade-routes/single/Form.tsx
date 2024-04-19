@@ -1,6 +1,3 @@
-import powers from '@/app/_lib/power-list';
-import governments from '@/app/_lib/government-list';
-import allegiances from '@/app/_lib/allegiance-list';
 import {
   Button,
   FormControl,
@@ -25,35 +22,41 @@ import Select from '../../inputs/form/Select';
 import { ICommodity } from '@/app/_types';
 
 export const SingleTradeRouteFormSchema = z.object({
-  targetSystem: z.object({ value: z.number() }).optional(),
-  buyStation: z.string().optional(),
-  sellSystem: z.object({ value: z.number() }).optional(),
-  sellStation: z.string().optional(),
-  commodityId: z.array(z.object({ value: z.string() })).optional(),
-
-  maxHopDistance: z.string().optional(),
-  minSupply: z.string().optional(),
-  minDemand: z.string().optional(),
-  maxPriceAge: z.string().optional(),
-  cargoCapacity: z.string().optional(),
-  availableCredits: z.string().optional(),
-
-  government: z
-    .enum(['', ...(governments.map((item) => item) as [string, ...string[]])])
-    .optional(),
-  allegiance: z
-    .enum(['', ...(allegiances.map((item) => item) as [string, ...string[]])])
-    .optional(),
-  requiresPermit: z.boolean(),
-  landingPadSize: z.string().optional(),
-  maxDistanceToArrival: z.string().optional(),
+  buySystemName: z
+    .object({ label: z.string() })
+    .optional()
+    .transform((val) => val?.label),
+  buyStationName: z.string().optional(),
+  sellSystemName: z
+    .object({ label: z.string() })
+    .optional()
+    .transform((val) => val?.label),
+  sellStationName: z.string().optional(),
+  commodityDisplayNames: z.array(z.object({ value: z.string() })).optional(),
+  maxRouteDistance: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
+  maxPriceAgeHours: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
+  cargoCapacity: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
+  availableCredits: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
+  maxLandingPadSize: z.string().optional(),
+  maxArrivalDistance: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
   includeFleetCarriers: z.boolean().optional(),
+  includeSurfaceStations: z.boolean().optional(),
   includeOdyssey: z.boolean().optional(),
-  includePlanetary: z.boolean().optional(),
-  includeOrbital: z.boolean().optional(),
-  power: z
-    .enum(['', ...(powers.map((item) => item) as [string, ...string[]])])
-    .optional(),
 });
 
 export type SubmitProps = z.infer<typeof SingleTradeRouteFormSchema>;
@@ -75,16 +78,25 @@ const Form: React.FC<FormProps> = ({
     handleSubmit,
     formState: { errors },
   } = useForm<SubmitProps>({
+    defaultValues: {
+      maxPriceAgeHours: 72,
+    },
     resolver: zodResolver(SingleTradeRouteFormSchema),
   });
 
   const onSubmit: SubmitHandler<SubmitProps> = (data) => {
-    console.log(data);
-    onSubmitHandler(data);
+    const submitData = {
+      ...data,
+      buySystemName: data.buySystemName,
+      sellSystemName: data.sellSystemName,
+    };
+    console.log('submitting form data: ', submitData);
+    onSubmitHandler(submitData);
   };
 
   // For demo purposes
-  const [buySystemStations, setTargetSystemStations] = useState<string[]>([]);
+  const [buySystemStations, setBuySystemStations] = useState<string[]>([]);
+  const [sellSystemStations, setSellSystemStations] = useState<string[]>([]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -99,32 +111,34 @@ const Form: React.FC<FormProps> = ({
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.targetSystem && errors.targetSystem.message)}
+            isInvalid={!!(errors.buySystemName && errors.buySystemName.message)}
           >
-            <FormLabel>Target System</FormLabel>
+            <FormLabel>Buy From System</FormLabel>
             <SystemsField
-              fieldName="targetSystem"
+              fieldName="buySystemName"
               control={control}
               placeholder="Select a system..."
               onChange={(newValue) => {
-                setTargetSystemStations(
+                setBuySystemStations(
                   newValue ? ['Station1', 'Station2', 'Station3'] : [],
                 );
               }}
             />
             <FormErrorMessage>
-              {errors.targetSystem && errors.targetSystem.message}
+              {errors.buySystemName && errors.buySystemName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
 
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.buyStation && errors.buyStation.message)}
+            isInvalid={
+              !!(errors.buyStationName && errors.buyStationName.message)
+            }
           >
             <FormLabel>Buy from Station</FormLabel>
             <Select
-              register={register('buyStation', {
+              register={register('buyStationName', {
                 disabled: buySystemStations.length === 0,
               })}
               placeholder={
@@ -141,7 +155,60 @@ const Form: React.FC<FormProps> = ({
                 ))}
             </Select>
             <FormErrorMessage>
-              {errors.buyStation && errors.buyStation.message}
+              {errors.buyStationName && errors.buyStationName.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <FormControl
+            isInvalid={
+              !!(errors.sellSystemName && errors.sellSystemName.message)
+            }
+          >
+            <FormLabel>Sell to System</FormLabel>
+            <SystemsField
+              fieldName="sellSystemName"
+              control={control}
+              placeholder="Select a system..."
+              onChange={(newValue) => {
+                setSellSystemStations(
+                  newValue ? ['Station1', 'Station2', 'Station3'] : [],
+                );
+              }}
+            />
+            <FormErrorMessage>
+              {errors.sellSystemName && errors.sellSystemName.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <FormControl
+            isInvalid={
+              !!(errors.sellStationName && errors.sellStationName.message)
+            }
+          >
+            <FormLabel>Sell to Station</FormLabel>
+            <Select
+              register={register('sellStationName', {
+                disabled: sellSystemStations.length === 0,
+              })}
+              placeholder={
+                sellSystemStations.length === 0
+                  ? 'Enter a system first...'
+                  : 'Select a station (optional)'
+              }
+            >
+              {sellSystemStations.length &&
+                sellSystemStations.map((station) => (
+                  <option key={station} value={station}>
+                    {station}
+                  </option>
+                ))}
+            </Select>
+            <FormErrorMessage>
+              {errors.sellStationName && errors.sellStationName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -154,7 +221,12 @@ const Form: React.FC<FormProps> = ({
 
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.commodityId && errors.commodityId.message)}
+            isInvalid={
+              !!(
+                errors.commodityDisplayNames &&
+                errors.commodityDisplayNames.message
+              )
+            }
           >
             <FormLabel>Commodities</FormLabel>
             <CommoditiesField
@@ -169,10 +241,10 @@ const Form: React.FC<FormProps> = ({
         <GridItem>
           <FormControl
             isInvalid={
-              !!(errors.maxHopDistance && errors.maxHopDistance.message)
+              !!(errors.maxRouteDistance && errors.maxRouteDistance.message)
             }
           >
-            <FormLabel>Max Hop Distance</FormLabel>
+            <FormLabel>Max Route Distance</FormLabel>
             <Input
               type="number"
               variant="outline"
@@ -181,10 +253,10 @@ const Form: React.FC<FormProps> = ({
               _hover={{
                 borderColor: GetColor('border'),
               }}
-              {...register('maxHopDistance')}
+              {...register('maxRouteDistance')}
             />
             <FormErrorMessage>
-              {errors.maxHopDistance && errors.maxHopDistance.message}
+              {errors.maxRouteDistance && errors.maxRouteDistance.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -206,50 +278,6 @@ const Form: React.FC<FormProps> = ({
             />
             <FormErrorMessage>
               {errors.cargoCapacity && errors.cargoCapacity.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem>
-          <FormControl
-            isInvalid={!!(errors.minSupply && errors.minSupply.message)}
-          >
-            <FormLabel>Min. Supply</FormLabel>
-            <Input
-              type="number"
-              variant="outline"
-              placeholder="Enter a number..."
-              borderColor={GetColor('border')}
-              _hover={{
-                borderColor: GetColor('border'),
-              }}
-              {...register('minSupply')}
-              defaultValue={1}
-            />
-            <FormErrorMessage>
-              {errors.minSupply && errors.minSupply.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem>
-          <FormControl
-            isInvalid={!!(errors.minDemand && errors.minDemand.message)}
-          >
-            <FormLabel>Min. Demand</FormLabel>
-            <Input
-              type="number"
-              variant="outline"
-              placeholder="Enter a number..."
-              borderColor={GetColor('border')}
-              _hover={{
-                borderColor: GetColor('border'),
-              }}
-              {...register('minDemand')}
-              defaultValue={1}
-            />
-            <FormErrorMessage>
-              {errors.minDemand && errors.minDemand.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -279,21 +307,19 @@ const Form: React.FC<FormProps> = ({
 
         <GridItem>
           <FormControl
-            isInvalid={!!(errors.maxPriceAge && errors.maxPriceAge.message)}
+            isInvalid={
+              !!(errors.maxPriceAgeHours && errors.maxPriceAgeHours.message)
+            }
           >
             <FormLabel>Max Price Age</FormLabel>
-            <Input
-              type="number"
-              variant="outline"
-              placeholder="Enter a number..."
-              borderColor={GetColor('border')}
-              _hover={{
-                borderColor: GetColor('border'),
-              }}
-              {...register('maxPriceAge')}
-            />
+            <Select register={register('maxPriceAgeHours')}>
+              <option value="12">12 hours</option>
+              <option value="24">1 day</option>
+              <option value="48">2 days</option>
+              <option value="72">3 days</option>
+            </Select>
             <FormErrorMessage>
-              {errors.maxPriceAge && errors.maxPriceAge.message}
+              {errors.maxPriceAgeHours && errors.maxPriceAgeHours.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -307,10 +333,7 @@ const Form: React.FC<FormProps> = ({
         <GridItem>
           <FormControl
             isInvalid={
-              !!(
-                errors.maxDistanceToArrival &&
-                errors.maxDistanceToArrival.message
-              )
+              !!(errors.maxArrivalDistance && errors.maxArrivalDistance.message)
             }
           >
             <FormLabel>Max Distance From Star</FormLabel>
@@ -322,11 +345,10 @@ const Form: React.FC<FormProps> = ({
               _hover={{
                 borderColor: GetColor('border'),
               }}
-              {...register('maxDistanceToArrival')}
+              {...register('maxArrivalDistance')}
             />
             <FormErrorMessage>
-              {errors.maxDistanceToArrival &&
-                errors.maxDistanceToArrival.message}
+              {errors.maxArrivalDistance && errors.maxArrivalDistance.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -341,13 +363,13 @@ const Form: React.FC<FormProps> = ({
         <GridItem>
           <FormControl
             isInvalid={
-              !!(errors.landingPadSize && errors.landingPadSize.message)
+              !!(errors.maxLandingPadSize && errors.maxLandingPadSize.message)
             }
           >
             <FormLabel>Ship Size</FormLabel>
-            <LandingPadsField register={register('landingPadSize')} />
+            <LandingPadsField register={register('maxLandingPadSize')} />
             <FormErrorMessage>
-              {errors.landingPadSize && errors.landingPadSize.message}
+              {errors.maxLandingPadSize && errors.maxLandingPadSize.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
