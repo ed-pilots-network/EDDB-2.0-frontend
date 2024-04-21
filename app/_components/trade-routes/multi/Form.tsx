@@ -45,7 +45,7 @@ export const MultiTradeRouteFormSchema = z.object({
   maxHopCount: z.string().optional(),
   minSupply: z.string().optional(),
   minDemand: z.string().optional(),
-  maxPriceAge: z.string().optional(),
+  maxPriceAge: z.number().optional(),
   cargoCapacity: z
     .string()
     .optional()

@@ -40,10 +40,7 @@ export const SingleTradeRouteFormSchema = z.object({
     .string()
     .optional()
     .transform((val) => Number(val)),
-  maxPriceAgeHours: z
-    .string()
-    .optional()
-    .transform((val) => Number(val)),
+  maxPriceAgeHours: z.number().optional(),
   cargoCapacity: z
     .string()
     .optional()
@@ -88,12 +85,7 @@ const Form: React.FC<FormProps> = ({
   });
 
   const onSubmit: SubmitHandler<SubmitProps> = (data) => {
-    const submitData = {
-      ...data,
-      buySystemName: data.buySystemName,
-      sellSystemName: data.sellSystemName,
-    };
-    onSubmitHandler(submitData);
+    onSubmitHandler(data);
   };
 
   // For demo purposes

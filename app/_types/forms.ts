@@ -26,7 +26,7 @@ export type TradeRouteFilters = {
   maxHopDistance?: string;
   minSupply?: string;
   minDemand?: string;
-  maxPriceAge?: string;
+  maxPriceAge?: number;
   cargoCapacity?: number;
   availableCredits?: number;
 
