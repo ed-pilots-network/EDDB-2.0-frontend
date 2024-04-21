@@ -93,7 +93,6 @@ const Form: React.FC<FormProps> = ({
       buySystemName: data.buySystemName,
       sellSystemName: data.sellSystemName,
     };
-    console.log('submitting form data: ', data);
     onSubmitHandler(submitData);
   };
 
