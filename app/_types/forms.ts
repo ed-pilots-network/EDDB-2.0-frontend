@@ -13,28 +13,23 @@ export type SingleTradeRouteForm = TradeRouteFilters & {
 };
 
 export type MultiTradeRouteForm = TradeRouteFilters & {
-  startSystem?: string;
+  startSystem: string;
   startStation?: string;
   finishSystem?: string;
-  maxHopCount?: string;
+  maxHopCount?: number;
 };
 
 export type TradeRouteFilters = {
   commodities?: {
     value: string;
   }[];
-  maxHopDistance?: string;
+  maxRouteDistance?: number;
   minSupply?: string;
   minDemand?: string;
-  maxPriceAge?: string;
+  maxPriceAge?: number;
   cargoCapacity?: number;
   availableCredits?: number;
-
-  government?: string;
-  allegiance?: string;
-  requiresPermit?: boolean;
   landingPadSize?: string;
-  maxDistanceToArrival?: string;
+  maxArrivalDistance?: number;
   stationType?: string;
-  power?: string;
 };
