@@ -326,12 +326,6 @@ const Form: React.FC<FormProps> = ({
           </FormControl>
         </GridItem>
 
-        <GridItem marginTop={30} colSpan={{ base: 1, md: 2, lg: 4 }}>
-          <h2>
-            <b>Station options:</b>
-          </h2>
-        </GridItem>
-
         <GridItem>
           <FormControl
             isInvalid={
