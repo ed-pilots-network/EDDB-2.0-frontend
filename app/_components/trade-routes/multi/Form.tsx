@@ -1,6 +1,3 @@
-import powers from '@/app/_lib/power-list';
-import governments from '@/app/_lib/government-list';
-import allegiances from '@/app/_lib/allegiance-list';
 import {
   Button,
   FormControl,
@@ -9,43 +6,46 @@ import {
   GridItem,
   Input,
   FormErrorMessage,
-  Checkbox,
 } from '@chakra-ui/react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import GetColor from '@/app/_hooks/colorSelector';
 import {
-  PowersField,
-  AllegiancesField,
-  GovernmentsField,
   LandingPadsField,
   StationTypesField,
   CommoditiesField,
   SystemsField,
 } from '@/app/_components/inputs';
-import CheckboxGroup from '../../form/CheckboxGroup';
 import { useState } from 'react';
 import Select from '../../inputs/form/Select';
 import { ICommodity } from '@/app/_types';
 
 export const MultiTradeRouteFormSchema = z.object({
-  startSystem: z
-    .object({ label: z.string() })
-    .optional()
-    .transform((val) => val?.label),
+  startSystem: z.object({ label: z.string() }).transform((val) => val?.label),
   startStation: z.string().optional(),
   finishSystem: z
     .object({ label: z.string() })
     .optional()
     .transform((val) => val?.label),
-  commodityId: z.array(z.object({ value: z.string() })).optional(),
-
-  maxHopDistance: z.string().optional(),
-  maxHopCount: z.string().optional(),
+  commodityDisplayName: z
+    .array(z.object({ value: z.string() }))
+    .optional()
+    .transform((val) => val?.map((v) => v.value)),
+  maxRouteDistance: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
+  maxHopCount: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
   minSupply: z.string().optional(),
   minDemand: z.string().optional(),
-  maxPriceAge: z.string().optional(),
+  maxPriceAgeHours: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
   cargoCapacity: z
     .string()
     .optional()
@@ -54,22 +54,14 @@ export const MultiTradeRouteFormSchema = z.object({
     .string()
     .optional()
     .transform((val) => Number(val)),
-  government: z
-    .enum(['', ...(governments.map((item) => item) as [string, ...string[]])])
-    .optional(),
-  allegiance: z
-    .enum(['', ...(allegiances.map((item) => item) as [string, ...string[]])])
-    .optional(),
-  requiresPermit: z.boolean(),
   landingPadSize: z.string().optional(),
-  maxDistanceToArrival: z.string().optional(),
+  maxArrivalDistance: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
   includeFleetCarriers: z.boolean().optional(),
   includeOdyssey: z.boolean().optional(),
-  includePlanetary: z.boolean().optional(),
-  includeOrbital: z.boolean().optional(),
-  power: z
-    .enum(['', ...(powers.map((item) => item) as [string, ...string[]])])
-    .optional(),
+  includeSurfaceStations: z.boolean().optional(),
 });
 
 export type SubmitProps = z.infer<typeof MultiTradeRouteFormSchema>;
@@ -186,7 +178,12 @@ const Form: React.FC<FormProps> = ({
 
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.commodityId && errors.commodityId.message)}
+            isInvalid={
+              !!(
+                errors.commodityDisplayName &&
+                errors.commodityDisplayName.message
+              )
+            }
           >
             <FormLabel>Commodities</FormLabel>
             <CommoditiesField
@@ -201,10 +198,10 @@ const Form: React.FC<FormProps> = ({
         <GridItem>
           <FormControl
             isInvalid={
-              !!(errors.maxHopDistance && errors.maxHopDistance.message)
+              !!(errors.maxRouteDistance && errors.maxRouteDistance.message)
             }
           >
-            <FormLabel>Max Hop Distance</FormLabel>
+            <FormLabel>Max Route Distance</FormLabel>
             <Input
               type="number"
               variant="outline"
@@ -213,10 +210,10 @@ const Form: React.FC<FormProps> = ({
               _hover={{
                 borderColor: GetColor('border'),
               }}
-              {...register('maxHopDistance')}
+              {...register('maxRouteDistance')}
             />
             <FormErrorMessage>
-              {errors.maxHopDistance && errors.maxHopDistance.message}
+              {errors.maxRouteDistance && errors.maxRouteDistance.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -332,7 +329,9 @@ const Form: React.FC<FormProps> = ({
 
         <GridItem>
           <FormControl
-            isInvalid={!!(errors.maxPriceAge && errors.maxPriceAge.message)}
+            isInvalid={
+              !!(errors.maxPriceAgeHours && errors.maxPriceAgeHours.message)
+            }
           >
             <FormLabel>Max Price Age</FormLabel>
             <Input
@@ -343,10 +342,10 @@ const Form: React.FC<FormProps> = ({
               _hover={{
                 borderColor: GetColor('border'),
               }}
-              {...register('maxPriceAge')}
+              {...register('maxPriceAgeHours')}
             />
             <FormErrorMessage>
-              {errors.maxPriceAge && errors.maxPriceAge.message}
+              {errors.maxPriceAgeHours && errors.maxPriceAgeHours.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -359,35 +358,8 @@ const Form: React.FC<FormProps> = ({
 
         <GridItem>
           <FormControl
-            isInvalid={!!(errors.government && errors.government.message)}
-          >
-            <FormLabel>Government</FormLabel>
-            <GovernmentsField register={register('government')} />
-            <FormErrorMessage>
-              {errors.government && errors.government.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem>
-          <FormControl
-            isInvalid={!!(errors.allegiance && errors.allegiance.message)}
-          >
-            <FormLabel>Allegiance</FormLabel>
-            <AllegiancesField register={register('allegiance')} />
-            <FormErrorMessage>
-              {errors.allegiance && errors.allegiance.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem>
-          <FormControl
             isInvalid={
-              !!(
-                errors.maxDistanceToArrival &&
-                errors.maxDistanceToArrival.message
-              )
+              !!(errors.maxArrivalDistance && errors.maxArrivalDistance.message)
             }
           >
             <FormLabel>Max Distance From Star</FormLabel>
@@ -399,21 +371,10 @@ const Form: React.FC<FormProps> = ({
               _hover={{
                 borderColor: GetColor('border'),
               }}
-              {...register('maxDistanceToArrival')}
+              {...register('maxArrivalDistance')}
             />
             <FormErrorMessage>
-              {errors.maxDistanceToArrival &&
-                errors.maxDistanceToArrival.message}
-            </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem>
-          <FormControl isInvalid={!!(errors.power && errors.power.message)}>
-            <FormLabel>Powers</FormLabel>
-            <PowersField register={register('power')} />
-            <FormErrorMessage>
-              {errors.power && errors.power.message}
+              {errors.maxArrivalDistance && errors.maxArrivalDistance.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -436,30 +397,6 @@ const Form: React.FC<FormProps> = ({
             <FormErrorMessage>
               {errors.landingPadSize && errors.landingPadSize.message}
             </FormErrorMessage>
-          </FormControl>
-        </GridItem>
-
-        <GridItem>
-          <FormControl>
-            <FormLabel>Other Options</FormLabel>
-            <CheckboxGroup>
-              <FormControl
-                isInvalid={
-                  !!(errors.requiresPermit && errors.requiresPermit.message)
-                }
-              >
-                <Checkbox
-                  colorScheme="orange"
-                  {...register('requiresPermit')}
-                  borderColor={GetColor('border')}
-                >
-                  Requires Permit
-                </Checkbox>
-                <FormErrorMessage>
-                  {errors.requiresPermit && errors.requiresPermit.message}
-                </FormErrorMessage>
-              </FormControl>
-            </CheckboxGroup>
           </FormControl>
         </GridItem>
       </Grid>
