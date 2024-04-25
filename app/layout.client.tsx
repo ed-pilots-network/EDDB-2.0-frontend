@@ -6,6 +6,7 @@ import Footer from './_components/footer/Footer';
 import GetColor from '@/app/_hooks/colorSelector';
 import theme from './_config/theme';
 import layoutConfig from './_config/layout';
+import { rubik } from './_config/theme/fonts';
 
 const LayoutClient = ({ children }: { children: React.ReactNode }) => (
   <>
@@ -16,6 +17,7 @@ const LayoutClient = ({ children }: { children: React.ReactNode }) => (
       color={GetColor('text')}
       direction="column"
       minH="100vh"
+      className={rubik.className}
     >
       <Navbar />
       <Box as="main" flex="1">

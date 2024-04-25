@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, HStack, Heading, Flex } from '@chakra-ui/react';
+import { Box, HStack, Flex } from '@chakra-ui/react';
 import Form, { SubmitProps } from '@/components/systems/Form';
 import GetColor from '@/app/_hooks/colorSelector';
 import { SystemForm } from '@/app/_types/system';
+import PageHeading from '../_components/utility/pageHeading';
 
 const PageClient = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -26,16 +27,7 @@ const PageClient = () => {
   return (
     <Flex flexDirection="column" gap="24px" width="100%">
       <HStack spacing={4}>
-        <Box alignSelf="baseline">
-          <Heading
-            as="h1"
-            size={{ base: 'md', md: 'lg', lg: 'lg' }}
-            marginX={{ base: 'auto', md: '0', lg: '0' }}
-            color={GetColor('accent-text')}
-          >
-            Systems
-          </Heading>
-        </Box>
+        <PageHeading heading="Systems" />
       </HStack>
       <Box
         borderWidth="2px"

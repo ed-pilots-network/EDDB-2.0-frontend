@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Flex, HStack, Heading, Image, Text, VStack } from '@chakra-ui/react';
 import { ICommodityFormResponse } from '@/types/index';
+import PageHeading from '../../utility/pageHeading';
 
 interface IFormResponseHeadProps {
   commodityResponse: ICommodityFormResponse[];
@@ -22,9 +23,7 @@ const FormResponseHeading: React.FC<IFormResponseHeadProps> = ({
 
   return (
     <>
-      <Heading as="h2" size="md">
-        Commodity: {commodityDisplayName}
-      </Heading>
+      <PageHeading heading={`Commodity: ${commodityDisplayName}`} />
       <HStack>
         <Heading as="h3" size="sm" hideBelow="md">
           Legend:

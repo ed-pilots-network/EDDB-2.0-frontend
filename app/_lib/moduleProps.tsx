@@ -21,12 +21,12 @@ export interface Module {
   description: string;
 }
 
-export const Tags = ['discover', 'trade', 'outfit'];
+export const Tags = ['Discover', 'Trade', 'Outfit'];
 
 const ModuleProps: Module[] = [
   {
     url: '/systems',
-    tag: 'discover',
+    tag: 'Discover',
     icon: faSun,
     title: 'Systems',
     description:
@@ -34,7 +34,7 @@ const ModuleProps: Module[] = [
   },
   {
     url: '/bodies',
-    tag: 'discover',
+    tag: 'Discover',
     icon: faEarthAmericas,
     title: 'Bodies',
     description:
@@ -42,7 +42,7 @@ const ModuleProps: Module[] = [
   },
   {
     url: '/stations',
-    tag: 'discover',
+    tag: 'Discover',
     icon: faCity,
     title: 'Stations',
     description:
@@ -50,7 +50,7 @@ const ModuleProps: Module[] = [
   },
   {
     url: '/attractions',
-    tag: 'discover',
+    tag: 'Discover',
     icon: faCamera,
     title: 'Attractions',
     description:
@@ -58,7 +58,7 @@ const ModuleProps: Module[] = [
   },
   {
     url: '/pois',
-    tag: 'discover',
+    tag: 'Discover',
     icon: faMapLocationDot,
     title: 'POIs',
     description:
@@ -66,7 +66,7 @@ const ModuleProps: Module[] = [
   },
   {
     url: '/factions',
-    tag: 'discover',
+    tag: 'Discover',
     icon: faLandmark,
     title: 'Factions',
     description:
@@ -74,7 +74,7 @@ const ModuleProps: Module[] = [
   },
   {
     url: '/shipyard',
-    tag: 'outfit',
+    tag: 'Outfit',
     icon: faShuttleSpace,
     title: 'Shipyard',
     description:
@@ -82,14 +82,14 @@ const ModuleProps: Module[] = [
   },
   {
     url: '/commodities',
-    tag: 'trade',
+    tag: 'Trade',
     icon: faCube,
     title: 'Trade Commodities',
     description: 'Find a place to buy or sell a specific commodity',
   },
   {
     url: '/trade/single',
-    tag: 'trade',
+    tag: 'Trade',
     icon: faArrowRight,
     title: 'Single Trade Route',
     description:
@@ -105,7 +105,7 @@ const ModuleProps: Module[] = [
   },
   {
     url: '/trade/loop',
-    tag: 'trade',
+    tag: 'Trade',
     icon: faArrowRightArrowLeft,
     title: 'Loop Trade Route',
     description:

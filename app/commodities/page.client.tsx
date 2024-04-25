@@ -4,7 +4,6 @@ import { useState } from 'react';
 import {
   Box,
   Center,
-  Heading,
   VStack,
   Alert,
   AlertIcon,
@@ -18,6 +17,7 @@ import GetColor from '@/app/_hooks/colorSelector';
 import layoutConfig from '../_config/layout';
 import { useGetMockSubmitFormClient } from '../_lib/api-calls';
 import { ICommodity } from '@/types/';
+import PageHeading from '../_components/utility/pageHeading';
 
 interface IPageClientProps {
   commodities: ICommodity[];
@@ -92,26 +92,10 @@ const PageClient: React.FC<IPageClientProps> = ({ commodities }) => {
         <Flex flexDirection="column" gap={6} width="100%">
           <VStack align="stretch" gap={6}>
             <Flex direction="column" gap={2}>
-              <Box alignSelf="baseline">
-                <Heading
-                  as="h1"
-                  size={{ base: 'md', md: 'lg', lg: 'lg' }}
-                  marginX={{ base: 'auto', md: '0', lg: '0' }}
-                  color={GetColor('accent-text')}
-                >
-                  Commodities
-                </Heading>
-              </Box>
-              <Box alignSelf="baseline">
-                <Heading
-                  as="h2"
-                  size={{ base: 'xs', md: 'sm', lg: 'sm' }}
-                  marginX={{ base: 'auto', md: '0', lg: '0' }}
-                  textAlign={{ base: 'center', sm: 'left', md: 'left' }}
-                >
-                  Find Closest Station to Buy/Sell Commodities
-                </Heading>
-              </Box>
+              <PageHeading
+                heading="Commodities"
+                subheading="Find Closest Station to Buy/Sell Commodities"
+              />
             </Flex>
             <Box
               borderWidth="2px"

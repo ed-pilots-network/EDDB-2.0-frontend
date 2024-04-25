@@ -9,7 +9,6 @@ import {
   Image,
   Flex,
   Link,
-  Heading,
   LinkBox,
   Box,
   LinkOverlay,
@@ -22,6 +21,7 @@ import GetColor from '@/app/_hooks/colorSelector';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import ModuleProps, { Module, Tags } from '@/app/_lib/moduleProps';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import PageHeading from '../utility/pageHeading';
 
 const NavDrawer = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -78,12 +78,11 @@ const NavDrawer = () => {
             <Divider opacity="1.0" marginBottom={8}></Divider>
             {Tags.map((tag) => (
               <Box key={tag}>
-                <Heading textTransform="capitalize" size="md" as="h2">
-                  {tag}
-                </Heading>
+                <PageHeading heading={tag} />
                 <Box marginBottom={6}>
                   {ModuleProps.filter(
-                    (module: Module) => module.tag === tag,
+                    (module: Module) =>
+                      module.tag.toLowerCase() === tag.toLowerCase(),
                   ).map((module) => (
                     <LinkBox
                       borderRadius="lg"
