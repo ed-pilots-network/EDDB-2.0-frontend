@@ -30,28 +30,66 @@ type FieldOptions = {
 };
 
 /* Swap out for live lookup when data is available? */
-const loadOptions = async (inputValue: string) => {
+const getMockSystemName = async (lookupString: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_MOCK_API_URL}/api/v1/exploration/system/by-name-containing`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: lookupString }),
+    },
+  );
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+
+  return res.json();
+};
+
+const getSystemName = async (lookupString: string) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_STAGING_API_URL}/api/v1/exploration/system/by-name-containing?subString=${lookupString}&amount=10`,
+  );
+
+  if (!res.ok) {
+    throw new Error(`HTTP error! status: ${res.status}`);
+  }
+
+  return res.json();
+};
+
+const loadOptions = async (inputValue: string): Promise<SelectGroup[] | []> => {
   if (inputValue.length < 3) {
     return [];
   }
 
-  const data = await fetch(
-    `${process.env.NEXT_PUBLIC_MOCK_API_URL}/api/v1/exploration/system/by-name-containing`,
-  )
-    .then((response) => response.json())
-    .then((response) =>
-      response.map((item: ISystem) => ({
-        value: item.eliteId,
-        label: item.name,
-      })),
-    )
-    .then((final) =>
-      final.filter((i: SelectGroup) =>
-        i.label.toLowerCase().includes(inputValue.toLowerCase()),
-      ),
+  try {
+    let res = [];
+
+    if (process.env.NODE_ENV === 'development') {
+      res = await getMockSystemName(inputValue);
+    } else {
+      res = await getSystemName(inputValue);
+    }
+
+    const returnArr: SelectGroup[] = res.map((item: ISystem) => ({
+      value: item.eliteId,
+      label: item.name,
+    }));
+
+    const returnArrFiltered = returnArr.filter((i: SelectGroup) =>
+      i.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
 
-  return data;
+    return returnArrFiltered;
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development')
+      console.error({ message: 'Failed fetching system name', error });
+    return [];
+  }
 };
 
 const SystemsField = ({

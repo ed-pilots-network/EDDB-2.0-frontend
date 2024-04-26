@@ -30,19 +30,30 @@ import Select from '../../inputs/form/Select';
 import { ICommodity } from '@/app/_types';
 
 export const MultiTradeRouteFormSchema = z.object({
-  startSystem: z.object({ value: z.number() }),
+  startSystem: z
+    .object({ label: z.string() })
+    .optional()
+    .transform((val) => val?.label),
   startStation: z.string().optional(),
-  finishSystem: z.object({ value: z.number() }).optional(),
+  finishSystem: z
+    .object({ label: z.string() })
+    .optional()
+    .transform((val) => val?.label),
   commodityId: z.array(z.object({ value: z.string() })).optional(),
 
   maxHopDistance: z.string().optional(),
   maxHopCount: z.string().optional(),
   minSupply: z.string().optional(),
   minDemand: z.string().optional(),
-  maxPriceAge: z.string().optional(),
-  cargoCapacity: z.string().optional(),
-  availableCredits: z.string().optional(),
-
+  maxPriceAge: z.number().optional(),
+  cargoCapacity: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
+  availableCredits: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
   government: z
     .enum(['', ...(governments.map((item) => item) as [string, ...string[]])])
     .optional(),
