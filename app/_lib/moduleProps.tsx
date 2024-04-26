@@ -97,7 +97,7 @@ const ModuleProps: Module[] = [
   },
   {
     url: '/trade/multi',
-    tag: 'trade',
+    tag: 'Trade',
     icon: faArrowTrendUp,
     title: 'Multi-Hop Trade Route',
     description:

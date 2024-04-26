@@ -81,8 +81,7 @@ const NavDrawer = () => {
                 <PageHeading heading={tag} />
                 <Box marginBottom={6}>
                   {ModuleProps.filter(
-                    (module: Module) =>
-                      module.tag.toLowerCase() === tag.toLowerCase(),
+                    (module: Module) => module.tag === tag,
                   ).map((module) => (
                     <LinkBox
                       borderRadius="lg"
