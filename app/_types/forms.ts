@@ -13,9 +13,9 @@ export type SingleTradeRouteForm = TradeRouteFilters & {
 };
 
 export type MultiTradeRouteForm = TradeRouteFilters & {
-  startSystem?: { value: number };
+  startSystem?: string;
   startStation?: string;
-  finishSystem?: { value: number };
+  finishSystem?: string;
   maxHopCount?: string;
 };
 
@@ -26,9 +26,9 @@ export type TradeRouteFilters = {
   maxHopDistance?: string;
   minSupply?: string;
   minDemand?: string;
-  maxPriceAge?: string;
-  cargoCapacity?: string;
-  availableCredits?: string;
+  maxPriceAge?: number;
+  cargoCapacity?: number;
+  availableCredits?: number;
 
   government?: string;
   allegiance?: string;

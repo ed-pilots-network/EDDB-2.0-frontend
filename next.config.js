@@ -14,7 +14,7 @@ const nextConfig = {
     return [
       {
         source: '/api/:path*',
-        destination: 'http://morris.edpn.io:8080/api/:path*',
+        destination: 'http://duval.edpn.io:8080/api/:path*',
       },
     ];
   },

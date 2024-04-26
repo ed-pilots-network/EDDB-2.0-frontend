@@ -1,22 +1,15 @@
 import { useState } from 'react';
 import { z } from 'zod';
-import { useForm, SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import powers from '@/app/_lib/power-list';
-import governments from '@/app/_lib/government-list';
-import allegiances from '@/app/_lib/allegiance-list';
+import { useForm, SubmitHandler } from 'react-hook-form';
+import GetColor from '@/app/_hooks/colorSelector';
 import {
-  PowersField,
-  AllegiancesField,
-  GovernmentsField,
   LandingPadsField,
   StationTypesField,
   CommoditiesField,
   SystemsField,
 } from '@/app/_components/inputs';
-import GetColor from '@/app/_hooks/colorSelector';
-import CheckboxGroup from '../../form/CheckboxGroup';
-import Select from '../../inputs/form/Select';
+import Select from '@/app/_components/inputs/form/Select';
 import {
   Button,
   FormControl,
@@ -25,7 +18,6 @@ import {
   GridItem,
   Input,
   FormErrorMessage,
-  Checkbox,
   Collapse,
   HStack,
 } from '@chakra-ui/react';
@@ -33,35 +25,41 @@ import { ICommodity } from '@/app/_types';
 import ExpandIcon from '../../utility/ExpandIcon';
 
 export const SingleTradeRouteFormSchema = z.object({
-  buySystem: z.object({ value: z.number() }).optional(),
-  buyStation: z.string().optional(),
-  sellSystem: z.object({ value: z.number() }).optional(),
-  sellStation: z.string().optional(),
-  commodityId: z.array(z.object({ value: z.string() })).optional(),
-
-  maxHopDistance: z.string().optional(),
-  minSupply: z.string().optional(),
-  minDemand: z.string().optional(),
-  maxPriceAge: z.string().optional(),
-  cargoCapacity: z.string().optional(),
-  availableCredits: z.string().optional(),
-
-  government: z
-    .enum(['', ...(governments.map((item) => item) as [string, ...string[]])])
-    .optional(),
-  allegiance: z
-    .enum(['', ...(allegiances.map((item) => item) as [string, ...string[]])])
-    .optional(),
-  requiresPermit: z.boolean(),
-  landingPadSize: z.string().optional(),
-  maxDistanceToArrival: z.string().optional(),
+  buySystemName: z
+    .object({ label: z.string() })
+    .optional()
+    .transform((val) => val?.label),
+  buyStationName: z.string().optional(),
+  sellSystemName: z
+    .object({ label: z.string() })
+    .optional()
+    .transform((val) => val?.label),
+  sellStationName: z.string().optional(),
+  commodityDisplayName: z
+    .array(z.object({ value: z.string() }))
+    .optional()
+    .transform((val) => val?.map((v) => v.value)),
+  maxRouteDistance: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
+  maxPriceAgeHours: z.number().optional(),
+  cargoCapacity: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
+  availableCredits: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
+  maxLandingPadSize: z.string().optional(),
+  maxArrivalDistance: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
   includeFleetCarriers: z.boolean().optional(),
+  includeSurfaceStations: z.boolean().optional(),
   includeOdyssey: z.boolean().optional(),
-  includePlanetary: z.boolean().optional(),
-  includeOrbital: z.boolean().optional(),
-  power: z
-    .enum(['', ...(powers.map((item) => item) as [string, ...string[]])])
-    .optional(),
 });
 
 export type SubmitProps = z.infer<typeof SingleTradeRouteFormSchema>;
@@ -84,11 +82,13 @@ const Form: React.FC<FormProps> = ({
     handleSubmit,
     formState: { errors },
   } = useForm<SubmitProps>({
+    defaultValues: {
+      maxPriceAgeHours: 72,
+    },
     resolver: zodResolver(SingleTradeRouteFormSchema),
   });
 
   const onSubmit: SubmitHandler<SubmitProps> = (data) => {
-    console.log(data);
     onSubmitHandler(data);
   };
 
@@ -109,11 +109,11 @@ const Form: React.FC<FormProps> = ({
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.buySystem && errors.buySystem.message)}
+            isInvalid={!!(errors.buySystemName && errors.buySystemName.message)}
           >
-            <FormLabel>Buy from System</FormLabel>
+            <FormLabel>Buy From System</FormLabel>
             <SystemsField
-              fieldName="buySystem"
+              fieldName="buySystemName"
               control={control}
               placeholder="Select a system..."
               onChange={(newValue) => {
@@ -123,18 +123,20 @@ const Form: React.FC<FormProps> = ({
               }}
             />
             <FormErrorMessage>
-              {errors.buySystem && errors.buySystem.message}
+              {errors.buySystemName && errors.buySystemName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
 
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.buyStation && errors.buyStation.message)}
+            isInvalid={
+              !!(errors.buyStationName && errors.buyStationName.message)
+            }
           >
             <FormLabel>Buy from Station</FormLabel>
             <Select
-              register={register('buyStation', {
+              register={register('buyStationName', {
                 disabled: buySystemStations.length === 0,
               })}
               placeholder={
@@ -151,18 +153,20 @@ const Form: React.FC<FormProps> = ({
                 ))}
             </Select>
             <FormErrorMessage>
-              {errors.buyStation && errors.buyStation.message}
+              {errors.buyStationName && errors.buyStationName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
 
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.sellSystem && errors.sellSystem.message)}
+            isInvalid={
+              !!(errors.sellSystemName && errors.sellSystemName.message)
+            }
           >
             <FormLabel>Sell to System</FormLabel>
             <SystemsField
-              fieldName="sellSystem"
+              fieldName="sellSystemName"
               control={control}
               placeholder="Select a system..."
               onChange={(newValue) => {
@@ -172,18 +176,20 @@ const Form: React.FC<FormProps> = ({
               }}
             />
             <FormErrorMessage>
-              {errors.sellSystem && errors.sellSystem.message}
+              {errors.sellSystemName && errors.sellSystemName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
 
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.sellStation && errors.sellStation.message)}
+            isInvalid={
+              !!(errors.sellStationName && errors.sellStationName.message)
+            }
           >
             <FormLabel>Sell to Station</FormLabel>
             <Select
-              register={register('sellStation', {
+              register={register('sellStationName', {
                 disabled: sellSystemStations.length === 0,
               })}
               placeholder={
@@ -200,12 +206,11 @@ const Form: React.FC<FormProps> = ({
                 ))}
             </Select>
             <FormErrorMessage>
-              {errors.sellStation && errors.sellStation.message}
+              {errors.sellStationName && errors.sellStationName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
       </Grid>
-
       <Collapse in={isExpanded} animateOpacity style={{ width: '100%' }}>
         <Grid
           templateColumns={{
@@ -224,7 +229,12 @@ const Form: React.FC<FormProps> = ({
 
           <GridItem colSpan={{ base: 1, md: 2 }}>
             <FormControl
-              isInvalid={!!(errors.commodityId && errors.commodityId.message)}
+              isInvalid={
+                !!(
+                  errors.commodityDisplayName &&
+                  errors.commodityDisplayName.message
+                )
+              }
             >
               <FormLabel>Commodities</FormLabel>
               <CommoditiesField
@@ -239,10 +249,10 @@ const Form: React.FC<FormProps> = ({
           <GridItem>
             <FormControl
               isInvalid={
-                !!(errors.maxHopDistance && errors.maxHopDistance.message)
+                !!(errors.maxRouteDistance && errors.maxRouteDistance.message)
               }
             >
-              <FormLabel>Max Hop Distance</FormLabel>
+              <FormLabel>Max Route Distance</FormLabel>
               <Input
                 type="number"
                 variant="outline"
@@ -251,10 +261,10 @@ const Form: React.FC<FormProps> = ({
                 _hover={{
                   borderColor: GetColor('border'),
                 }}
-                {...register('maxHopDistance')}
+                {...register('maxRouteDistance')}
               />
               <FormErrorMessage>
-                {errors.maxHopDistance && errors.maxHopDistance.message}
+                {errors.maxRouteDistance && errors.maxRouteDistance.message}
               </FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -284,50 +294,6 @@ const Form: React.FC<FormProps> = ({
 
           <GridItem>
             <FormControl
-              isInvalid={!!(errors.minSupply && errors.minSupply.message)}
-            >
-              <FormLabel>Min. Supply</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                placeholder="Enter a number..."
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('minSupply')}
-                defaultValue={1}
-              />
-              <FormErrorMessage>
-                {errors.minSupply && errors.minSupply.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.minDemand && errors.minDemand.message)}
-            >
-              <FormLabel>Min. Demand</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                placeholder="Enter a number..."
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('minDemand')}
-                defaultValue={1}
-              />
-              <FormErrorMessage>
-                {errors.minDemand && errors.minDemand.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
               isInvalid={
                 !!(errors.availableCredits && errors.availableCredits.message)
               }
@@ -351,51 +317,19 @@ const Form: React.FC<FormProps> = ({
 
           <GridItem>
             <FormControl
-              isInvalid={!!(errors.maxPriceAge && errors.maxPriceAge.message)}
+              isInvalid={
+                !!(errors.maxPriceAgeHours && errors.maxPriceAgeHours.message)
+              }
             >
               <FormLabel>Max Price Age</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                placeholder="Enter a number..."
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('maxPriceAge')}
-              />
+              <Select register={register('maxPriceAgeHours')}>
+                <option value={12}>12 hours</option>
+                <option value={24}>1 day</option>
+                <option value={48}>2 days</option>
+                <option value={72}>3 days</option>
+              </Select>
               <FormErrorMessage>
-                {errors.maxPriceAge && errors.maxPriceAge.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem marginTop={30} colSpan={{ base: 1, md: 2, lg: 4 }}>
-            <h2>
-              <b>Station options:</b>
-            </h2>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.government && errors.government.message)}
-            >
-              <FormLabel>Government</FormLabel>
-              <GovernmentsField register={register('government')} />
-              <FormErrorMessage>
-                {errors.government && errors.government.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.allegiance && errors.allegiance.message)}
-            >
-              <FormLabel>Allegiance</FormLabel>
-              <AllegiancesField register={register('allegiance')} />
-              <FormErrorMessage>
-                {errors.allegiance && errors.allegiance.message}
+                {errors.maxPriceAgeHours && errors.maxPriceAgeHours.message}
               </FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -404,8 +338,7 @@ const Form: React.FC<FormProps> = ({
             <FormControl
               isInvalid={
                 !!(
-                  errors.maxDistanceToArrival &&
-                  errors.maxDistanceToArrival.message
+                  errors.maxArrivalDistance && errors.maxArrivalDistance.message
                 )
               }
             >
@@ -418,21 +351,10 @@ const Form: React.FC<FormProps> = ({
                 _hover={{
                   borderColor: GetColor('border'),
                 }}
-                {...register('maxDistanceToArrival')}
+                {...register('maxArrivalDistance')}
               />
               <FormErrorMessage>
-                {errors.maxDistanceToArrival &&
-                  errors.maxDistanceToArrival.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl isInvalid={!!(errors.power && errors.power.message)}>
-              <FormLabel>Powers</FormLabel>
-              <PowersField register={register('power')} />
-              <FormErrorMessage>
-                {errors.power && errors.power.message}
+                {errors.maxArrivalDistance && errors.maxArrivalDistance.message}
               </FormErrorMessage>
             </FormControl>
           </GridItem>
@@ -447,38 +369,14 @@ const Form: React.FC<FormProps> = ({
           <GridItem>
             <FormControl
               isInvalid={
-                !!(errors.landingPadSize && errors.landingPadSize.message)
+                !!(errors.maxLandingPadSize && errors.maxLandingPadSize.message)
               }
             >
               <FormLabel>Ship Size</FormLabel>
-              <LandingPadsField register={register('landingPadSize')} />
+              <LandingPadsField register={register('maxLandingPadSize')} />
               <FormErrorMessage>
-                {errors.landingPadSize && errors.landingPadSize.message}
+                {errors.maxLandingPadSize && errors.maxLandingPadSize.message}
               </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl>
-              <FormLabel>Other Options</FormLabel>
-              <CheckboxGroup>
-                <FormControl
-                  isInvalid={
-                    !!(errors.requiresPermit && errors.requiresPermit.message)
-                  }
-                >
-                  <Checkbox
-                    colorScheme="orange"
-                    {...register('requiresPermit')}
-                    borderColor={GetColor('border')}
-                  >
-                    Requires Permit
-                  </Checkbox>
-                  <FormErrorMessage>
-                    {errors.requiresPermit && errors.requiresPermit.message}
-                  </FormErrorMessage>
-                </FormControl>
-              </CheckboxGroup>
             </FormControl>
           </GridItem>
         </Grid>
