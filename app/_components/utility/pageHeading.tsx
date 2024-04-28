@@ -1,5 +1,6 @@
 import { Box, Flex, Heading } from '@chakra-ui/react';
 import GetColor from '@/app/_hooks/colorSelector';
+import { orbitron } from '@/app/_config/theme/fonts';
 
 const PageHeading = ({
   heading,
@@ -15,6 +16,7 @@ const PageHeading = ({
         size={{ base: 'xs', md: 'sm', lg: 'sm' }}
         marginX={{ base: 'auto', md: '0', lg: '0' }}
         textAlign={{ base: 'center', sm: 'left', md: 'left' }}
+        className={orbitron.className}
       >
         {subheading}
       </Heading>
@@ -29,6 +31,7 @@ const PageHeading = ({
           size={{ base: 'md', md: 'lg', lg: 'lg' }}
           marginX={{ base: 'auto', md: '0', lg: '0' }}
           color={GetColor('accent-text')}
+          className={orbitron.className}
         >
           {heading}
         </Heading>

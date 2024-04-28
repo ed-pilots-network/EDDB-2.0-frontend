@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, HStack, Heading, Flex } from '@chakra-ui/react';
+import { Box, HStack, Flex } from '@chakra-ui/react';
 import Form, { SubmitProps } from '@/components/trade-routes/multi/Form';
 import GetColor from '@/app/_hooks/colorSelector';
 import { MultiTradeRouteForm } from '@/app/_types/forms';
 import { ICommodity } from '@/app/_types';
+import PageHeading from '@/app/_components/utility/pageHeading';
 
 interface IPageClientProps {
   commodities: ICommodity[] | null;
@@ -31,16 +32,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
   return (
     <Flex flexDirection="column" gap="24px" width="100%">
       <HStack spacing={4}>
-        <Box alignSelf="baseline">
-          <Heading
-            as="h1"
-            size={{ base: 'md', md: 'lg', lg: 'lg' }}
-            marginX={{ base: 'auto', md: '0', lg: '0' }}
-            color={GetColor('accent-text')}
-          >
-            Multi Hop Trade Route Finder
-          </Heading>
-        </Box>
+        <PageHeading heading="Multi Hop Trade Route Finder" />
       </HStack>
       <Box
         borderWidth="2px"

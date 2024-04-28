@@ -1,7 +1,8 @@
 'use client';
 
-import { Button, Center, Flex, Heading, Text } from '@chakra-ui/react';
+import { Button, Center, Flex, Text } from '@chakra-ui/react';
 import layoutConfig from './_config/layout';
+import PageHeading from './_components/utility/pageHeading';
 
 export default function Error({
   error,
@@ -18,13 +19,7 @@ export default function Error({
         gap="24px"
         maxWidth={layoutConfig.maxWidth}
       >
-        <Heading
-          as="h1"
-          size={{ base: 'md', md: 'lg', lg: 'lg' }}
-          marginX={{ base: 'auto', md: '0', lg: '0' }}
-        >
-          Something went wrong!
-        </Heading>
+        <PageHeading heading="Something went wrong!" />
         <Text as="samp">{error.message}</Text>
         <Button type="button" variant="outline" onClick={() => reset()}>
           Try again

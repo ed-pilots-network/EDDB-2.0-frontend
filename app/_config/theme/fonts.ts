@@ -1,17 +1,4 @@
 import localFont from 'next/font/local';
-import { Orbitron, Rubik } from 'next/font/google';
-
-export const orbitron = Orbitron({
-  weight: ['400'],
-  subsets: ['latin'],
-  display: 'swap',
-});
-
-export const rubik = Rubik({
-  weight: ['400'],
-  subsets: ['latin'],
-  display: 'swap',
-});
 
 export const rift = localFont({
   src: [
@@ -21,6 +8,34 @@ export const rift = localFont({
     },
     {
       path: '../../../public/fonts/Rift_Bold.ttf',
+      weight: '700',
+    },
+  ],
+  display: 'swap',
+});
+
+export const orbitron = localFont({
+  src: [
+    {
+      path: '../../../public/fonts/Orbitron-Regular.ttf',
+      weight: '400',
+    },
+    {
+      path: '../../../public/fonts/Orbitron-Bold.ttf',
+      weight: '700',
+    },
+  ],
+  display: 'swap',
+});
+
+export const rubik = localFont({
+  src: [
+    {
+      path: '../../../public/fonts/Rubik-Regular.ttf',
+      weight: '400',
+    },
+    {
+      path: '../../../public/fonts/Rubik-Bold.ttf',
       weight: '700',
     },
   ],
