@@ -18,7 +18,6 @@ import {
   GridItem,
   Input,
   FormErrorMessage,
-  Collapse,
   HStack,
 } from '@chakra-ui/react';
 import { ICommodity } from '@/app/_types';
@@ -43,7 +42,10 @@ export const SingleTradeRouteFormSchema = z.object({
     .string()
     .optional()
     .transform((val) => Number(val)),
-  maxPriceAgeHours: z.number().optional(),
+  maxPriceAgeHours: z
+    .string()
+    .optional()
+    .transform((val) => Number(val)),
   cargoCapacity: z
     .string()
     .optional()
@@ -76,11 +78,12 @@ const Form: React.FC<FormProps> = ({
   commodities,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
+  const [dirtyFieldsArray, setDirtyFieldsArray] = useState<string[]>([]);
   const {
     control,
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, dirtyFields },
   } = useForm<SubmitProps>({
     defaultValues: {
       maxPriceAgeHours: 72,
@@ -88,9 +91,38 @@ const Form: React.FC<FormProps> = ({
     resolver: zodResolver(SingleTradeRouteFormSchema),
   });
 
+  const optionalFields = [
+    'buyStationName',
+    'sellStationName',
+    'includeFleetCarriers',
+    'includeSurfaceStations',
+    'includeOdyssey',
+    'cargoCapacity',
+    'availableCredits',
+  ];
+
+  const hidePristineFields = (pristineFields: string[]) => {
+    pristineFields.forEach((field) => {
+      const element = document.getElementById(field);
+      if (element) {
+        console.log('element', element);
+        element.style.display = 'none';
+      }
+    });
+  };
+
   const onSubmit: SubmitHandler<SubmitProps> = (data) => {
+    const dirtyFieldsKeys = Object.keys(dirtyFields);
+    const pristineFields = optionalFields.filter(
+      (field) => !dirtyFieldsKeys.includes(field),
+    );
+    hidePristineFields(pristineFields);
+    setDirtyFieldsArray(dirtyFieldsKeys);
+
     onSubmitHandler(data);
   };
+
+  console.log('dirtyFieldsArray', dirtyFieldsArray);
 
   // For demo purposes
   const [buySystemStations, setBuySystemStations] = useState<string[]>([]);
@@ -210,177 +242,161 @@ const Form: React.FC<FormProps> = ({
             </FormErrorMessage>
           </FormControl>
         </GridItem>
+        <GridItem marginTop={30} colSpan={{ base: 1, md: 2, lg: 4 }}>
+          <h2>
+            <b>Route options:</b>
+          </h2>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <FormControl
+            isInvalid={
+              !!(
+                errors.commodityDisplayName &&
+                errors.commodityDisplayName.message
+              )
+            }
+          >
+            <FormLabel>Commodities</FormLabel>
+            <CommoditiesField
+              control={control}
+              placeholder="Select commodities..."
+              commodities={commodities}
+              isMulti={true}
+            />
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={
+              !!(errors.maxRouteDistance && errors.maxRouteDistance.message)
+            }
+          >
+            <FormLabel>Max Route Distance</FormLabel>
+            <Input
+              type="number"
+              variant="outline"
+              placeholder="Enter a number..."
+              borderColor={GetColor('border')}
+              _hover={{
+                borderColor: GetColor('border'),
+              }}
+              {...register('maxRouteDistance')}
+            />
+            <FormErrorMessage>
+              {errors.maxRouteDistance && errors.maxRouteDistance.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem id="cargoCapacity">
+          <FormControl
+            isInvalid={!!(errors.cargoCapacity && errors.cargoCapacity.message)}
+          >
+            <FormLabel>Cargo Capacity</FormLabel>
+            <Input
+              type="number"
+              variant="outline"
+              placeholder="Enter a number..."
+              borderColor={GetColor('border')}
+              _hover={{
+                borderColor: GetColor('border'),
+              }}
+              {...register('cargoCapacity')}
+            />
+            <FormErrorMessage>
+              {errors.cargoCapacity && errors.cargoCapacity.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={
+              !!(errors.availableCredits && errors.availableCredits.message)
+            }
+          >
+            <FormLabel>Available Credits</FormLabel>
+            <Input
+              type="number"
+              variant="outline"
+              placeholder="Enter a number..."
+              borderColor={GetColor('border')}
+              _hover={{
+                borderColor: GetColor('border'),
+              }}
+              {...register('availableCredits')}
+            />
+            <FormErrorMessage>
+              {errors.availableCredits && errors.availableCredits.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={
+              !!(errors.maxPriceAgeHours && errors.maxPriceAgeHours.message)
+            }
+          >
+            <FormLabel>Max Price Age</FormLabel>
+            <Select register={register('maxPriceAgeHours')}>
+              <option value={12}>12 hours</option>
+              <option value={24}>1 day</option>
+              <option value={48}>2 days</option>
+              <option value={72}>3 days</option>
+            </Select>
+            <FormErrorMessage>
+              {errors.maxPriceAgeHours && errors.maxPriceAgeHours.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={
+              !!(errors.maxArrivalDistance && errors.maxArrivalDistance.message)
+            }
+          >
+            <FormLabel>Max Distance From Star</FormLabel>
+            <Input
+              type="number"
+              variant="outline"
+              placeholder="In LS"
+              borderColor={GetColor('border')}
+              _hover={{
+                borderColor: GetColor('border'),
+              }}
+              {...register('maxArrivalDistance')}
+            />
+            <FormErrorMessage>
+              {errors.maxArrivalDistance && errors.maxArrivalDistance.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 1, md: 2 }}>
+          <FormControl>
+            <FormLabel>Station Type</FormLabel>
+            <StationTypesField register={register} />
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={
+              !!(errors.maxLandingPadSize && errors.maxLandingPadSize.message)
+            }
+          >
+            <FormLabel>Ship Size</FormLabel>
+            <LandingPadsField register={register('maxLandingPadSize')} />
+            <FormErrorMessage>
+              {errors.maxLandingPadSize && errors.maxLandingPadSize.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
       </Grid>
-      <Collapse in={isExpanded} animateOpacity style={{ width: '100%' }}>
-        <Grid
-          templateColumns={{
-            base: 'repeat(1, 1fr)',
-            md: 'repeat(2, 1fr)',
-            lg: 'repeat(4, 1fr)',
-          }}
-          gap={6}
-          marginBottom="10"
-        >
-          <GridItem marginTop={30} colSpan={{ base: 1, md: 2, lg: 4 }}>
-            <h2>
-              <b>Route options:</b>
-            </h2>
-          </GridItem>
-
-          <GridItem colSpan={{ base: 1, md: 2 }}>
-            <FormControl
-              isInvalid={
-                !!(
-                  errors.commodityDisplayName &&
-                  errors.commodityDisplayName.message
-                )
-              }
-            >
-              <FormLabel>Commodities</FormLabel>
-              <CommoditiesField
-                control={control}
-                placeholder="Select commodities..."
-                commodities={commodities}
-                isMulti={true}
-              />
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={
-                !!(errors.maxRouteDistance && errors.maxRouteDistance.message)
-              }
-            >
-              <FormLabel>Max Route Distance</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                placeholder="Enter a number..."
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('maxRouteDistance')}
-              />
-              <FormErrorMessage>
-                {errors.maxRouteDistance && errors.maxRouteDistance.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={
-                !!(errors.cargoCapacity && errors.cargoCapacity.message)
-              }
-            >
-              <FormLabel>Cargo Capacity</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                placeholder="Enter a number..."
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('cargoCapacity')}
-              />
-              <FormErrorMessage>
-                {errors.cargoCapacity && errors.cargoCapacity.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={
-                !!(errors.availableCredits && errors.availableCredits.message)
-              }
-            >
-              <FormLabel>Available Credits</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                placeholder="Enter a number..."
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('availableCredits')}
-              />
-              <FormErrorMessage>
-                {errors.availableCredits && errors.availableCredits.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={
-                !!(errors.maxPriceAgeHours && errors.maxPriceAgeHours.message)
-              }
-            >
-              <FormLabel>Max Price Age</FormLabel>
-              <Select register={register('maxPriceAgeHours')}>
-                <option value={12}>12 hours</option>
-                <option value={24}>1 day</option>
-                <option value={48}>2 days</option>
-                <option value={72}>3 days</option>
-              </Select>
-              <FormErrorMessage>
-                {errors.maxPriceAgeHours && errors.maxPriceAgeHours.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={
-                !!(
-                  errors.maxArrivalDistance && errors.maxArrivalDistance.message
-                )
-              }
-            >
-              <FormLabel>Max Distance From Star</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                placeholder="In LS"
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('maxArrivalDistance')}
-              />
-              <FormErrorMessage>
-                {errors.maxArrivalDistance && errors.maxArrivalDistance.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem colSpan={{ base: 1, md: 2 }}>
-            <FormControl>
-              <FormLabel>Station Type</FormLabel>
-              <StationTypesField register={register} />
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={
-                !!(errors.maxLandingPadSize && errors.maxLandingPadSize.message)
-              }
-            >
-              <FormLabel>Ship Size</FormLabel>
-              <LandingPadsField register={register('maxLandingPadSize')} />
-              <FormErrorMessage>
-                {errors.maxLandingPadSize && errors.maxLandingPadSize.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-        </Grid>
-      </Collapse>
 
       <HStack justifyContent="space-between" paddingRight={[0, '40%', '50%']}>
         <Button
