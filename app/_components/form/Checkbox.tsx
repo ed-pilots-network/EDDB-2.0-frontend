@@ -1,5 +1,5 @@
 import { UseFormRegisterReturn } from 'react-hook-form';
-import { Checkbox as ChakraCheckbox } from '@chakra-ui/react';
+import { Checkbox as ChakraCheckbox, Text } from '@chakra-ui/react';
 
 interface Props {
   register: UseFormRegisterReturn;
@@ -9,7 +9,7 @@ interface Props {
 
 const Checkbox = ({ register, label, checked }: Props) => (
   <ChakraCheckbox {...register} defaultChecked={checked}>
-    {label}
+    <Text fontSize="sm">{label}</Text>
   </ChakraCheckbox>
 );
 

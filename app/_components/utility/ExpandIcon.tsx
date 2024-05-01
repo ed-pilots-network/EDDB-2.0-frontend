@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, keyframes } from '@chakra-ui/react';
+import { Button, HStack, Text, keyframes } from '@chakra-ui/react';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 
 interface ExpandIconProps {
@@ -16,17 +16,23 @@ const ExpandIcon = ({ isExpanded, setIsExpanded }: ExpandIconProps) => {
   return (
     <Button onClick={() => setIsExpanded(!isExpanded)} variant="unstyled">
       {isExpanded ? (
-        <ChevronUpIcon
-          boxSize={10}
-          color="orange.3"
-          animation={`${rotate} 0.3s linear`}
-        />
+        <HStack>
+          <Text color="orange.3">Filters</Text>
+          <ChevronUpIcon
+            boxSize={10}
+            color="orange.3"
+            animation={`${rotate} 0.3s linear`}
+          />
+        </HStack>
       ) : (
-        <ChevronDownIcon
-          boxSize={10}
-          color="orange.3"
-          animation={`${rotate} 0.3s linear`}
-        />
+        <HStack>
+          <Text color="orange.3">Filters</Text>
+          <ChevronDownIcon
+            boxSize={10}
+            color="orange.3"
+            animation={`${rotate} 0.3s linear`}
+          />
+        </HStack>
       )}
     </Button>
   );
