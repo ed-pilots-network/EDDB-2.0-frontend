@@ -242,7 +242,7 @@ const Form: React.FC<FormProps> = ({
             <Input
               type="number"
               variant="outline"
-              placeholder="Enter a number..."
+              placeholder="in LY"
               borderColor={GetColor('border')}
               _hover={{
                 borderColor: GetColor('border'),
@@ -306,7 +306,9 @@ const Form: React.FC<FormProps> = ({
             }
           >
             <FormLabel>Max Price Age</FormLabel>
-            <Select register={register('maxPriceAgeHours')}>
+            <Select
+              register={register('maxPriceAgeHours', { valueAsNumber: true })}
+            >
               <option value={12}>12 hours</option>
               <option value={24}>1 day</option>
               <option value={48}>2 days</option>
