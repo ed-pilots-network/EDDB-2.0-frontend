@@ -26,7 +26,7 @@ describe('Station Type Field', () => {
   it('checks only Orbital Station by default', () => {
     expect(screen.getAllByRole('checkbox').length).toEqual(4);
 
-    expect(checkboxValues[0].name === 'Orbital Station').toBeTruthy();
+    expect(checkboxValues[0].name === 'Orbital').toBeTruthy();
 
     expect(screen.getByLabelText(checkboxValues[0].name)).toBeChecked();
     expect(screen.getByLabelText(checkboxValues[1].name)).not.toBeChecked();

@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { act, render, screen } from '@testing-library/react';
 import Form from './Form';
 import { ChakraProvider } from '@chakra-ui/react';
 
@@ -43,6 +43,20 @@ describe('Stations Form', () => {
       </ChakraProvider>,
     );
 
+    // filter button hides fields at start
+    expect(
+      screen.queryByRole('combobox', { name: 'Commodities' }),
+    ).not.toBeInTheDocument();
+
+    const filtersButton = screen.getByRole('button', { name: 'Filters' });
+
+    expect(filtersButton).toBeInTheDocument();
+
+    // @ts-ignore depecated warning relates to PR https://github.com/testing-library/react-testing-library/pull/1319
+    act(() => {
+      filtersButton.click();
+    });
+
     expect(
       screen.getByRole('combobox', { name: 'Buy from Station' }),
     ).toBeInTheDocument();
@@ -53,10 +67,6 @@ describe('Stations Form', () => {
 
     expect(
       screen.getByRole('spinbutton', { name: 'Max Route Distance' }),
-    ).toBeInTheDocument();
-
-    expect(
-      screen.getByRole('combobox', { name: 'Commodities' }),
     ).toBeInTheDocument();
 
     expect(

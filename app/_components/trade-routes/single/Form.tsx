@@ -79,12 +79,11 @@ const Form: React.FC<FormProps> = ({
   commodities,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [dirtyFieldsArray, setDirtyFieldsArray] = useState<string[]>([]);
   const {
     control,
     register,
     handleSubmit,
-    formState: { errors, dirtyFields },
+    formState: { errors },
   } = useForm<SubmitProps>({
     defaultValues: {
       maxPriceAgeHours: 72,
@@ -92,38 +91,9 @@ const Form: React.FC<FormProps> = ({
     resolver: zodResolver(SingleTradeRouteFormSchema),
   });
 
-  const optionalFields = [
-    'buyStationName',
-    'sellStationName',
-    'includeFleetCarriers',
-    'includeSurfaceStations',
-    'includeOdyssey',
-    'cargoCapacity',
-    'availableCredits',
-  ];
-
-  const hidePristineFields = (pristineFields: string[]) => {
-    pristineFields.forEach((field) => {
-      const element = document.getElementById(field);
-      if (element) {
-        console.log('element', element);
-        element.style.display = 'none';
-      }
-    });
-  };
-
   const onSubmit: SubmitHandler<SubmitProps> = (data) => {
-    const dirtyFieldsKeys = Object.keys(dirtyFields);
-    const pristineFields = optionalFields.filter(
-      (field) => !dirtyFieldsKeys.includes(field),
-    );
-    hidePristineFields(pristineFields);
-    setDirtyFieldsArray(dirtyFieldsKeys);
-
     onSubmitHandler(data);
   };
-
-  console.log('dirtyFieldsArray', dirtyFieldsArray);
 
   // For demo purposes
   const [buySystemStations, setBuySystemStations] = useState<string[]>([]);
@@ -317,7 +287,7 @@ const Form: React.FC<FormProps> = ({
             </FormControl>
           </GridItem>
 
-          <GridItem id="cargoCapacity">
+          <GridItem>
             <FormControl
               isInvalid={
                 !!(errors.cargoCapacity && errors.cargoCapacity.message)
