@@ -30,40 +30,40 @@ const ModuleLaunchPad = () => {
 
   const filteredGrid = (filter: String) => (
     <SimpleGrid columns={[1, 1, 3]} spacing="50px">
-      {ModuleProps.filter((module: Module) => module.tag === filter).map(
-        (module) => (
-          <LinkBox
-            key={module.title}
-            borderWidth="1px"
-            borderRadius="9px"
-            borderColor={GetColor('border-accent')}
-            bgColor={cardBgColor}
-            p="25px"
-            position="relative"
-            _hover={{
-              boxShadow: 'lg',
-              backdropFilter: 'auto',
-              backdropContrast: '90%',
-            }}
+      {ModuleProps.filter(
+        (module: Module) => module.tag.toLowerCase() === filter,
+      ).map((module) => (
+        <LinkBox
+          key={module.title}
+          borderWidth="1px"
+          borderRadius="9px"
+          borderColor={GetColor('border-accent')}
+          bgColor={cardBgColor}
+          p="25px"
+          position="relative"
+          _hover={{
+            boxShadow: 'lg',
+            backdropFilter: 'auto',
+            backdropContrast: '90%',
+          }}
+        >
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            mb="10px"
+            letterSpacing="2px"
           >
-            <Box
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-              mb="10px"
-              letterSpacing="2px"
-            >
-              <Icon as={FontAwesomeIcon} icon={module.icon} />
-              <LinkOverlay as={NextLink} href={module.url} ml="10px">
-                <Heading as="h2" size="sm">
-                  {module.title}
-                </Heading>
-              </LinkOverlay>
-            </Box>
-            <Text>{module.description}</Text>
-          </LinkBox>
-        ),
-      )}
+            <Icon as={FontAwesomeIcon} icon={module.icon} />
+            <LinkOverlay as={NextLink} href={module.url} ml="10px">
+              <Heading as="h2" size="sm">
+                {module.title}
+              </Heading>
+            </LinkOverlay>
+          </Box>
+          <Text>{module.description}</Text>
+        </LinkBox>
+      ))}
     </SimpleGrid>
   );
 

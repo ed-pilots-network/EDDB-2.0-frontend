@@ -1,5 +1,4 @@
 import { extendTheme } from '@chakra-ui/react';
-import { rubik, orbitron } from './fonts';
 import buttonTheme from './button';
 import checkboxTheme from './checkbox';
 import radioTheme from './radio';
@@ -78,10 +77,6 @@ const theme = extendTheme({
     switchDark: {
       200: '#9bb9cb',
     },
-  },
-  fonts: {
-    body: rubik.style.fontFamily,
-    heading: orbitron.style.fontFamily,
   },
 });
 

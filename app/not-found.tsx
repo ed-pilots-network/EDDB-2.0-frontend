@@ -1,8 +1,9 @@
 'use client';
 
 import NextLink from 'next/link';
-import { Button, Center, Flex, Heading } from '@chakra-ui/react';
+import { Button, Center, Flex } from '@chakra-ui/react';
 import layoutConfig from './_config/layout';
+import PageHeading from './_components/utility/pageHeading';
 
 export default function NotFound() {
   return (
@@ -13,13 +14,7 @@ export default function NotFound() {
         gap="24px"
         maxWidth={layoutConfig.maxWidth}
       >
-        <Heading
-          as="h1"
-          size={{ base: 'md', md: 'lg', lg: 'lg' }}
-          marginX={{ base: 'auto', md: '0', lg: '0' }}
-        >
-          404 - Page Not Found
-        </Heading>
+        <PageHeading heading="404 - Page Not Found" />
         <NextLink href="/" passHref>
           <Button type="button" variant="outline">
             Go back Home

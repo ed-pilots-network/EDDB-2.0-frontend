@@ -224,7 +224,7 @@ const Form: React.FC<FormProps> = ({
             <Input
               type="number"
               variant="outline"
-              placeholder="Enter a number..."
+              placeholder="in LY"
               borderColor={GetColor('border')}
               _hover={{
                 borderColor: GetColor('border'),
