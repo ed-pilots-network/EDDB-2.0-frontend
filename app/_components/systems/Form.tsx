@@ -14,11 +14,9 @@ import {
   Input,
   FormErrorMessage,
   Checkbox,
-  Collapse,
-  HStack,
+  Text,
 } from '@chakra-ui/react';
 
-import { useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -32,7 +30,6 @@ import {
   PowerEffectsField,
   PowersField,
 } from '../inputs';
-import ExpandIcon from '../utility/ExpandIcon';
 
 export const SystemFormSchema = z.object({
   systemId: z.string(),
@@ -72,7 +69,6 @@ interface FormProps {
 }
 
 const Form: React.FC<FormProps> = ({ onSubmitHandler, isLoading }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
   const {
     register,
     handleSubmit,
@@ -114,217 +110,189 @@ const Form: React.FC<FormProps> = ({ onSubmitHandler, isLoading }) => {
             </FormErrorMessage>
           </FormControl>
         </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.allegiance && errors.allegiance.message)}
+          >
+            <FormLabel>Allegiance</FormLabel>
+            <AllegiancesField register={register('allegiance')} />
+            <FormErrorMessage>
+              {errors.allegiance && errors.allegiance.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.government && errors.government.message)}
+          >
+            <FormLabel>Government</FormLabel>
+            <GovernmentsField register={register('government')} />
+            <FormErrorMessage>
+              {errors.government && errors.government.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl isInvalid={!!(errors.economy && errors.economy.message)}>
+            <FormLabel>Economy</FormLabel>
+            <EconomiesField register={register('economy')} />
+            <FormErrorMessage>
+              {errors.economy && errors.economy.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.security && errors.security.message)}
+          >
+            <FormLabel>Security Level</FormLabel>
+            <Select register={register('security')}>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+              <option value="anarchy">Anarchy</option>
+              <option value="lawless">Lawless</option>
+            </Select>
+            <FormErrorMessage>
+              {errors.security && errors.security.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem colSpan={{ base: 1, md: 2, lg: 3 }}>
+          <FormControl
+            isInvalid={!!(errors.minorFaction && errors.minorFaction.message)}
+          >
+            <FormLabel>Minor Faction</FormLabel>
+            <Input
+              borderColor={GetColor('border')}
+              variant="outline"
+              placeholder="Enter a minor faction..."
+              {...register('minorFaction')}
+            />
+            <FormErrorMessage>
+              {errors.minorFaction && errors.minorFaction.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.presenceType && errors.presenceType.message)}
+          >
+            <FormLabel>Presence Type</FormLabel>
+            <Select register={register('presenceType')}>
+              <option value="controlling">Controlling</option>
+              <option value="presence">Presence</option>
+            </Select>
+            <FormErrorMessage>
+              {errors.presenceType && errors.presenceType.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.stationFilter && errors.stationFilter.message)}
+          >
+            <FormLabel>Station Filter</FormLabel>
+            <Select register={register('stationFilter')}>
+              <option value="hasStations">Has Stations</option>
+              <option value="hasPlanetary">Has Planetary</option>
+              <option value="hasOrbital">Has Orbital</option>
+              <option value="hasNoStations">Has No Stations</option>
+            </Select>
+            <FormErrorMessage>
+              {errors.stationFilter && errors.stationFilter.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl isInvalid={!!(errors.power && errors.power.message)}>
+            <FormLabel>Powers</FormLabel>
+            <PowersField register={register('power')} />
+            <FormErrorMessage>
+              {errors.power && errors.power.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.powerEffect && errors.powerEffect.message)}
+          >
+            <FormLabel>Power Effect</FormLabel>
+            <PowerEffectsField register={register('powerEffect')} />
+            <FormErrorMessage>
+              {errors.powerEffect && errors.powerEffect.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.factionState && errors.factionState.message)}
+          >
+            <FormLabel>Faction State</FormLabel>
+            <FactionStatesField register={register('factionState')} />
+            <FormErrorMessage>
+              {errors.factionState && errors.factionState.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
       </Grid>
-
-      <Collapse in={isExpanded} animateOpacity style={{ width: '100%' }}>
-        <Grid
-          templateColumns={{
-            base: 'repeat(1, 1fr)',
-            md: 'repeat(2, 1fr)',
-            lg: 'repeat(4, 1fr)',
-          }}
-          gap={6}
-          marginBottom="10"
-        >
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.allegiance && errors.allegiance.message)}
+      <Grid
+        templateColumns={{
+          base: 'repeat(1, 1fr)',
+          md: 'repeat(2, 1fr)',
+          lg: 'repeat(4, 1fr)',
+        }}
+        gap={6}
+        marginBottom="10"
+      >
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.onlyPopulated && errors.onlyPopulated.message)}
+          >
+            <Checkbox
+              colorScheme="orange"
+              {...register('onlyPopulated')}
+              borderColor={GetColor('border')}
             >
-              <FormLabel>Allegiance</FormLabel>
-              <AllegiancesField register={register('allegiance')} />
-              <FormErrorMessage>
-                {errors.allegiance && errors.allegiance.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.government && errors.government.message)}
+              Only Populated Systems
+            </Checkbox>
+            <FormErrorMessage>
+              {errors.onlyPopulated && errors.onlyPopulated.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+        <GridItem>
+          <FormControl
+            isInvalid={
+              !!(errors.requiresPermit && errors.requiresPermit.message)
+            }
+          >
+            <Checkbox
+              colorScheme="orange"
+              {...register('requiresPermit')}
+              borderColor={GetColor('border')}
             >
-              <FormLabel>Government</FormLabel>
-              <GovernmentsField register={register('government')} />
-              <FormErrorMessage>
-                {errors.government && errors.government.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.economy && errors.economy.message)}
-            >
-              <FormLabel>Economy</FormLabel>
-              <EconomiesField register={register('economy')} />
-              <FormErrorMessage>
-                {errors.economy && errors.economy.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.security && errors.security.message)}
-            >
-              <FormLabel>Security Level</FormLabel>
-              <Select register={register('security')}>
-                <option value="low">Low</option>
-                <option value="medium">Medium</option>
-                <option value="high">High</option>
-                <option value="anarchy">Anarchy</option>
-                <option value="lawless">Lawless</option>
-              </Select>
-              <FormErrorMessage>
-                {errors.security && errors.security.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem colSpan={{ base: 1, md: 2, lg: 3 }}>
-            <FormControl
-              isInvalid={!!(errors.minorFaction && errors.minorFaction.message)}
-            >
-              <FormLabel>Minor Faction</FormLabel>
-              <Input
-                borderColor={GetColor('border')}
-                variant="outline"
-                placeholder="Enter a minor faction..."
-                {...register('minorFaction')}
-              />
-              <FormErrorMessage>
-                {errors.minorFaction && errors.minorFaction.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.presenceType && errors.presenceType.message)}
-            >
-              <FormLabel>Presence Type</FormLabel>
-              <Select register={register('presenceType')}>
-                <option value="controlling">Controlling</option>
-                <option value="presence">Presence</option>
-              </Select>
-              <FormErrorMessage>
-                {errors.presenceType && errors.presenceType.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={
-                !!(errors.stationFilter && errors.stationFilter.message)
-              }
-            >
-              <FormLabel>Station Filter</FormLabel>
-              <Select register={register('stationFilter')}>
-                <option value="hasStations">Has Stations</option>
-                <option value="hasPlanetary">Has Planetary</option>
-                <option value="hasOrbital">Has Orbital</option>
-                <option value="hasNoStations">Has No Stations</option>
-              </Select>
-              <FormErrorMessage>
-                {errors.stationFilter && errors.stationFilter.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl isInvalid={!!(errors.power && errors.power.message)}>
-              <FormLabel>Powers</FormLabel>
-              <PowersField register={register('power')} />
-              <FormErrorMessage>
-                {errors.power && errors.power.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.powerEffect && errors.powerEffect.message)}
-            >
-              <FormLabel>Power Effect</FormLabel>
-              <PowerEffectsField register={register('powerEffect')} />
-              <FormErrorMessage>
-                {errors.powerEffect && errors.powerEffect.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={!!(errors.factionState && errors.factionState.message)}
-            >
-              <FormLabel>Faction State</FormLabel>
-              <FactionStatesField register={register('factionState')} />
-              <FormErrorMessage>
-                {errors.factionState && errors.factionState.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-        </Grid>
-      </Collapse>
-      <Collapse in={isExpanded} animateOpacity style={{ width: '100%' }}>
-        <Grid
-          templateColumns={{
-            base: 'repeat(1, 1fr)',
-            md: 'repeat(2, 1fr)',
-            lg: 'repeat(4, 1fr)',
-          }}
-          gap={6}
-          marginBottom="10"
-        >
-          <GridItem>
-            <FormControl
-              isInvalid={
-                !!(errors.onlyPopulated && errors.onlyPopulated.message)
-              }
-            >
-              <Checkbox
-                colorScheme="orange"
-                {...register('onlyPopulated')}
-                borderColor={GetColor('border')}
-              >
-                Only Populated Systems
-              </Checkbox>
-              <FormErrorMessage>
-                {errors.onlyPopulated && errors.onlyPopulated.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-          <GridItem>
-            <FormControl
-              isInvalid={
-                !!(errors.requiresPermit && errors.requiresPermit.message)
-              }
-            >
-              <Checkbox
-                colorScheme="orange"
-                {...register('requiresPermit')}
-                borderColor={GetColor('border')}
-              >
-                Requires Permit
-              </Checkbox>
-              <FormErrorMessage>
-                {errors.requiresPermit && errors.requiresPermit.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-        </Grid>
-      </Collapse>
-      <HStack justifyContent="space-between" paddingRight={[0, '40%', '50%']}>
-        <Button
-          type="submit"
-          variant="submit"
-          id="submit"
-          isLoading={isLoading}
-        >
-          Find Systems
-        </Button>
-        <ExpandIcon isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
-      </HStack>
+              <Text fontSize="sm">Requires Permit</Text>
+            </Checkbox>
+            <FormErrorMessage>
+              {errors.requiresPermit && errors.requiresPermit.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+      </Grid>
+      <Button type="submit" variant="submit" id="submit" isLoading={isLoading}>
+        Find Systems
+      </Button>
     </form>
   );
 };
