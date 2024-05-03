@@ -17,7 +17,7 @@ const ExpandIcon = ({ isExpanded, setIsExpanded }: ExpandIconProps) => {
     <Button onClick={() => setIsExpanded(!isExpanded)} variant="unstyled">
       {isExpanded ? (
         <HStack>
-          <Text color="orange.3">Filters</Text>
+          <Text color="orange.3">Options</Text>
           <ChevronUpIcon
             boxSize={10}
             color="orange.3"
@@ -26,7 +26,7 @@ const ExpandIcon = ({ isExpanded, setIsExpanded }: ExpandIconProps) => {
         </HStack>
       ) : (
         <HStack>
-          <Text color="orange.3">Filters</Text>
+          <Text color="orange.3">Options</Text>
           <ChevronDownIcon
             boxSize={10}
             color="orange.3"
