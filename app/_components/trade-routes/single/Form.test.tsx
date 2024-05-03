@@ -48,7 +48,7 @@ describe('Stations Form', () => {
       screen.queryByRole('combobox', { name: 'Commodities' }),
     ).not.toBeInTheDocument();
 
-    const filtersButton = screen.getByRole('button', { name: 'Filters' });
+    const filtersButton = screen.getByRole('button', { name: 'Options' });
 
     expect(filtersButton).toBeInTheDocument();
 
