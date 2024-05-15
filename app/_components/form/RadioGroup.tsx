@@ -5,7 +5,7 @@ import { PropsWithChildren } from 'react';
 const RadioGroup = ({ children }: PropsWithChildren<{}>) => (
   <ChackraRadioGroup colorScheme="gray">
     <Stack
-      height={{ base: 'inherit', md: '40px', lg: '40px' }}
+      height={{ base: 'inherit', md: '45px', lg: '45px' }}
       borderWidth="1px"
       borderRadius="md"
       borderColor={GetColor('border')}
