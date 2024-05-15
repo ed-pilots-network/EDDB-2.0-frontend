@@ -7,10 +7,10 @@ interface Props {
 }
 
 export const checkboxValues = [
-  { name: 'Orbital Station', value: 'includeOrbital', checked: true },
+  { name: 'Orbital', value: 'includeOrbital', checked: true },
   { name: 'Planetary', value: 'includePlanetary' },
   { name: 'Odyssey', value: 'includeOdyssey' },
-  { name: 'Fleet Carriers', value: 'includeFleetCarriers' },
+  { name: 'Carriers', value: 'includeFleetCarriers' },
 ];
 
 const StationTypesField = ({ register }: Props) => (

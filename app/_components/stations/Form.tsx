@@ -13,6 +13,7 @@ import {
   Input,
   FormErrorMessage,
   Checkbox,
+  Text,
 } from '@chakra-ui/react';
 
 import { z } from 'zod';
@@ -117,7 +118,17 @@ const Form: React.FC<FormProps> = ({
             </FormErrorMessage>
           </FormControl>
         </GridItem>
+      </Grid>
 
+      <Grid
+        templateColumns={{
+          base: 'repeat(1, 1fr)',
+          md: 'repeat(2, 1fr)',
+          lg: 'repeat(4, 1fr)',
+        }}
+        gap={6}
+        marginBottom="10"
+      >
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl isInvalid={!!(errors.ships && errors.ships.message)}>
             <FormLabel>Ships</FormLabel>
@@ -324,13 +335,14 @@ const Form: React.FC<FormProps> = ({
                 isInvalid={
                   !!(errors.requiresPermit && errors.requiresPermit.message)
                 }
+                display="flex"
               >
                 <Checkbox
                   colorScheme="orange"
                   {...register('requiresPermit')}
                   borderColor={GetColor('border')}
                 >
-                  Requires Permit
+                  <Text fontSize="sm">Requires Permit</Text>
                 </Checkbox>
                 <FormErrorMessage>
                   {errors.requiresPermit && errors.requiresPermit.message}

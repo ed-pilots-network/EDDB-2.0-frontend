@@ -1,6 +1,6 @@
 import GetColor from '@/app/_hooks/colorSelector';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import { Radio as ChakraRadio } from '@chakra-ui/react';
+import { Radio as ChakraRadio, Text } from '@chakra-ui/react';
 
 interface Props {
   register: UseFormRegisterReturn;
@@ -18,7 +18,7 @@ const Radio = ({ register, label, value, checked }: Props) => (
     defaultChecked={checked}
     value={value}
   >
-    {label}
+    <Text fontSize="sm">{label}</Text>
   </ChakraRadio>
 );
 

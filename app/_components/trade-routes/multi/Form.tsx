@@ -1,19 +1,10 @@
-import powers from '@/app/_lib/power-list';
-import governments from '@/app/_lib/government-list';
-import allegiances from '@/app/_lib/allegiance-list';
-import {
-  Button,
-  FormControl,
-  FormLabel,
-  Grid,
-  GridItem,
-  Input,
-  FormErrorMessage,
-  Checkbox,
-} from '@chakra-ui/react';
+import { useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import powers from '@/app/_lib/power-list';
+import governments from '@/app/_lib/government-list';
+import allegiances from '@/app/_lib/allegiance-list';
 import GetColor from '@/app/_hooks/colorSelector';
 import {
   PowersField,
@@ -25,8 +16,18 @@ import {
   SystemsField,
 } from '@/app/_components/inputs';
 import CheckboxGroup from '../../form/CheckboxGroup';
-import { useState } from 'react';
 import Select from '../../inputs/form/Select';
+import {
+  Button,
+  FormControl,
+  FormLabel,
+  Grid,
+  GridItem,
+  Input,
+  FormErrorMessage,
+  Checkbox,
+  Text,
+} from '@chakra-ui/react';
 import { ICommodity } from '@/app/_types';
 
 export const MultiTradeRouteFormSchema = z.object({
@@ -447,13 +448,14 @@ const Form: React.FC<FormProps> = ({
                 isInvalid={
                   !!(errors.requiresPermit && errors.requiresPermit.message)
                 }
+                display="flex"
               >
                 <Checkbox
                   colorScheme="orange"
                   {...register('requiresPermit')}
                   borderColor={GetColor('border')}
                 >
-                  Requires Permit
+                  <Text fontSize="sm">Requires Permit</Text>
                 </Checkbox>
                 <FormErrorMessage>
                   {errors.requiresPermit && errors.requiresPermit.message}

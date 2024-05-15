@@ -4,6 +4,7 @@ import { PropsWithChildren } from 'react';
 
 const CheckboxGroup = ({ children }: PropsWithChildren<{}>) => (
   <Stack
+    height={{ base: 'inherit', md: '40px', lg: '40px' }}
     borderWidth="1px"
     borderRadius="md"
     borderColor={GetColor('border')}

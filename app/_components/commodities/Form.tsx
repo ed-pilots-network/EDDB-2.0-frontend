@@ -15,8 +15,8 @@ import {
   FormErrorMessage,
 } from '@chakra-ui/react';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import GetColor from '@/app/_hooks/colorSelector';
 import {
   CommoditiesField,
@@ -67,6 +67,13 @@ const Form: React.FC<FormProps> = ({
     resolver: zodResolver(CommodityFormSchema),
   });
 
+  const onSubmit: SubmitHandler<SubmitProps> = (data) => {
+    const submitData = data;
+    if (isBuying) submitData.minDemand = 0;
+    if (!isBuying) submitData.minSupply = 0;
+    onSubmitHandler(submitData);
+  };
+
   const numberInputs = (
     label: string,
     registerName: 'minSupply' | 'minDemand',
@@ -94,13 +101,6 @@ const Form: React.FC<FormProps> = ({
       </NumberInput>
     </>
   );
-
-  const onSubmit: SubmitHandler<SubmitProps> = (data) => {
-    const submitData = data;
-    if (isBuying) submitData.minDemand = 0;
-    if (!isBuying) submitData.minSupply = 0;
-    onSubmitHandler(submitData);
-  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -154,7 +154,12 @@ const Form: React.FC<FormProps> = ({
           </FormControl>
         </Stack>
         <Stack
-          direction={{ base: 'column', sm: 'column', md: 'column', lg: 'row' }}
+          direction={{
+            base: 'column',
+            sm: 'column',
+            md: 'column',
+            lg: 'row',
+          }}
           spacing={4}
           width="100%"
           marginTop={4}
@@ -174,7 +179,12 @@ const Form: React.FC<FormProps> = ({
           </FormControl>
         </Stack>
         <Stack
-          direction={{ base: 'column', sm: 'column', md: 'column', lg: 'row' }}
+          direction={{
+            base: 'column',
+            sm: 'column',
+            md: 'column',
+            lg: 'row',
+          }}
           spacing={4}
           width="100%"
           marginTop={4}

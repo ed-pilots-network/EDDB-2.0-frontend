@@ -14,6 +14,7 @@ import {
   Input,
   FormErrorMessage,
   Checkbox,
+  Text,
 } from '@chakra-ui/react';
 
 import { z } from 'zod';
@@ -281,7 +282,7 @@ const Form: React.FC<FormProps> = ({ onSubmitHandler, isLoading }) => {
               {...register('requiresPermit')}
               borderColor={GetColor('border')}
             >
-              Requires Permit
+              <Text fontSize="sm">Requires Permit</Text>
             </Checkbox>
             <FormErrorMessage>
               {errors.requiresPermit && errors.requiresPermit.message}
