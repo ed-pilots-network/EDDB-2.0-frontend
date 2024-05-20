@@ -24,12 +24,27 @@ import {
 import { ICommodity } from '@/app/_types';
 import ExpandIcon from '../../utility/ExpandIcon';
 import { useGetData } from '@/app/_lib/api-calls';
+import ChakraReactSelect from '../../inputs/form/ChakraReactSelect';
 
 export const SingleTradeRouteFormSchema = z.object({
-  buySystemName: z.object({ label: z.string(), value: z.number() }).optional(),
-  buyStationName: z.string().optional(),
-  sellSystemName: z.object({ label: z.string(), value: z.number() }).optional(),
-  sellStationName: z.string().optional(),
+  buySystemName: z
+    .object({ label: z.string(), value: z.number() })
+    .optional()
+    .nullable(),
+  buyStationName: z
+    .object({ label: z.string(), value: z.string() })
+    .optional()
+    .nullable()
+    .transform((val) => val?.value),
+  sellSystemName: z
+    .object({ label: z.string(), value: z.number() })
+    .optional()
+    .nullable(),
+  sellStationName: z
+    .object({ label: z.string(), value: z.string() })
+    .optional()
+    .nullable()
+    .transform((val) => val?.value),
   commodityDisplayName: z
     .array(z.object({ value: z.string() }))
     .optional()
@@ -72,7 +87,6 @@ const Form: React.FC<FormProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // For demo purposes
   const [buySystemStations, setBuySystemStations] = useState<string[]>([]);
   const [sellSystemStations, setSellSystemStations] = useState<string[]>([]);
 
@@ -163,23 +177,16 @@ const Form: React.FC<FormProps> = ({
             }
           >
             <FormLabel>Buy from Station</FormLabel>
-            <Select
-              register={register('buyStationName', {
-                disabled: buySystemStations.length === 0,
-              })}
+            <ChakraReactSelect
+              fieldName="buyStationName"
+              options={buySystemStations}
+              control={control}
               placeholder={
                 buySystemStations.length === 0
                   ? 'Enter a system first...'
                   : 'Select a station (optional)'
               }
-            >
-              {buySystemStations.length &&
-                buySystemStations.map((station) => (
-                  <option key={station} value={station}>
-                    {station}
-                  </option>
-                ))}
-            </Select>
+            />
             <FormErrorMessage>
               {errors.buyStationName && errors.buyStationName.message}
             </FormErrorMessage>
@@ -211,23 +218,16 @@ const Form: React.FC<FormProps> = ({
             }
           >
             <FormLabel>Sell to Station</FormLabel>
-            <Select
-              register={register('sellStationName', {
-                disabled: sellSystemStations.length === 0,
-              })}
+            <ChakraReactSelect
+              fieldName="sellStationName"
+              options={sellSystemStations}
+              control={control}
               placeholder={
                 sellSystemStations.length === 0
                   ? 'Enter a system first...'
                   : 'Select a station (optional)'
               }
-            >
-              {sellSystemStations.length &&
-                sellSystemStations.map((station) => (
-                  <option key={station} value={station}>
-                    {station}
-                  </option>
-                ))}
-            </Select>
+            />
             <FormErrorMessage>
               {errors.sellStationName && errors.sellStationName.message}
             </FormErrorMessage>

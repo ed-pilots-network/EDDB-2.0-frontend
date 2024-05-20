@@ -29,26 +29,6 @@ type FieldOptions = {
   isMulti?: true;
 };
 
-/* Swap out for live lookup when data is available? */
-const getMockSystemName = async (lookupString: string) => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_MOCK_API_URL}/api/v1/exploration/system/by-name-containing`,
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name: lookupString }),
-    },
-  );
-
-  if (!res.ok) {
-    throw new Error(`HTTP error! status: ${res.status}`);
-  }
-
-  return res.json();
-};
-
 const getSystemName = async (lookupString: string) => {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_STAGING_API_URL}/api/v1/exploration/system/by-name-containing?subString=${lookupString}&amount=10`,
@@ -69,11 +49,7 @@ const loadOptions = async (inputValue: string): Promise<SelectGroup[] | []> => {
   try {
     let res = [];
 
-    if (process.env.NODE_ENV === 'development') {
-      res = await getMockSystemName(inputValue);
-    } else {
-      res = await getSystemName(inputValue);
-    }
+    res = await getSystemName(inputValue);
 
     const returnArr: SelectGroup[] = res.map((item: ISystem) => ({
       value: item.eliteId,
