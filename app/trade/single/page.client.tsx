@@ -22,7 +22,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
       ...data,
     };
 
-    // TODO: submit data to backend
+    // TODO: format and submit data to backend
     setTimeout(() => {
       console.log('submitted ', submitData);
       setIsLoading(false);

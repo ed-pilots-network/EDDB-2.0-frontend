@@ -67,8 +67,29 @@ const useGetMockSubmitFormClient = (queryString: string) => {
   };
 };
 
+// typical request fetching data from staging URL
+const useGetData = (queryString: string) => {
+  const { data, error, isLoading, mutate } = useSWR(
+    `${process.env.NEXT_PUBLIC_STAGING_API_URL}/api/v1/${queryString}`,
+    fetcher,
+    {
+      shouldRetryOnError: false,
+      revalidateOnFocus: false,
+      revalidateOnMount: false,
+    },
+  );
+
+  return {
+    data,
+    isLoading,
+    error,
+    mutate,
+  };
+};
+
 export {
   getFormElementDataServer,
   useGetSubmitFormClient,
   useGetMockSubmitFormClient,
+  useGetData,
 };

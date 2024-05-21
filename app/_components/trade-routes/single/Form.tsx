@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
@@ -23,18 +23,28 @@ import {
 } from '@chakra-ui/react';
 import { ICommodity } from '@/app/_types';
 import ExpandIcon from '../../utility/ExpandIcon';
+import { useGetData } from '@/app/_lib/api-calls';
+import ChakraReactSelect from '../../inputs/form/ChakraReactSelect';
 
 export const SingleTradeRouteFormSchema = z.object({
   buySystemName: z
-    .object({ label: z.string() })
+    .object({ label: z.string(), value: z.number() })
     .optional()
-    .transform((val) => val?.label),
-  buyStationName: z.string().optional(),
+    .nullable(),
+  buyStationName: z
+    .object({ label: z.string(), value: z.string() })
+    .optional()
+    .nullable()
+    .transform((val) => val?.value),
   sellSystemName: z
-    .object({ label: z.string() })
+    .object({ label: z.string(), value: z.number() })
     .optional()
-    .transform((val) => val?.label),
-  sellStationName: z.string().optional(),
+    .nullable(),
+  sellStationName: z
+    .object({ label: z.string(), value: z.string() })
+    .optional()
+    .nullable()
+    .transform((val) => val?.value),
   commodityDisplayName: z
     .array(z.object({ value: z.string() }))
     .optional()
@@ -76,10 +86,15 @@ const Form: React.FC<FormProps> = ({
   commodities,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const [buySystemStations, setBuySystemStations] = useState<string[]>([]);
+  const [sellSystemStations, setSellSystemStations] = useState<string[]>([]);
+
   const {
     control,
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm<SubmitProps>({
     defaultValues: {
@@ -87,14 +102,46 @@ const Form: React.FC<FormProps> = ({
     },
     resolver: zodResolver(SingleTradeRouteFormSchema),
   });
+  const buySystem = watch('buySystemName', { value: 0, label: '' });
+  const sellSystem = watch('sellSystemName', { value: 0, label: '' });
+
+  const { data: buyStationData, mutate: buyStationMutate } = useGetData(
+    `exploration/system/list-station-names?systemName=${buySystem?.label}`,
+  );
+
+  const { data: sellStationData, mutate: sellStationMutate } = useGetData(
+    `exploration/system/list-station-names?systemName=${sellSystem?.label}`,
+  );
+
+  useEffect(() => {
+    const systemName = buySystem?.label;
+    const fetchData = async () => {
+      await buyStationMutate();
+    };
+
+    if (systemName) fetchData();
+  }, [buySystem, buyStationMutate]);
+
+  useEffect(() => {
+    if (buyStationData) setBuySystemStations(buyStationData);
+  }, [buyStationData]);
+
+  useEffect(() => {
+    const systemName = sellSystem?.label;
+    const fetchData = async () => {
+      await sellStationMutate();
+    };
+
+    if (systemName) fetchData();
+  }, [sellSystem, sellStationMutate]);
+
+  useEffect(() => {
+    if (sellStationData) setSellSystemStations(sellStationData);
+  }, [sellStationData]);
 
   const onSubmit: SubmitHandler<SubmitProps> = (data) => {
     onSubmitHandler(data);
   };
-
-  // For demo purposes
-  const [buySystemStations, setBuySystemStations] = useState<string[]>([]);
-  const [sellSystemStations, setSellSystemStations] = useState<string[]>([]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -116,11 +163,6 @@ const Form: React.FC<FormProps> = ({
               fieldName="buySystemName"
               control={control}
               placeholder="Select a system..."
-              onChange={(newValue) => {
-                setBuySystemStations(
-                  newValue ? ['Station1', 'Station2', 'Station3'] : [],
-                );
-              }}
             />
             <FormErrorMessage>
               {errors.buySystemName && errors.buySystemName.message}
@@ -135,23 +177,16 @@ const Form: React.FC<FormProps> = ({
             }
           >
             <FormLabel>Buy from Station</FormLabel>
-            <Select
-              register={register('buyStationName', {
-                disabled: buySystemStations.length === 0,
-              })}
+            <ChakraReactSelect
+              fieldName="buyStationName"
+              options={buySystemStations}
+              control={control}
               placeholder={
                 buySystemStations.length === 0
                   ? 'Enter a system first...'
                   : 'Select a station (optional)'
               }
-            >
-              {buySystemStations.length &&
-                buySystemStations.map((station) => (
-                  <option key={station} value={station}>
-                    {station}
-                  </option>
-                ))}
-            </Select>
+            />
             <FormErrorMessage>
               {errors.buyStationName && errors.buyStationName.message}
             </FormErrorMessage>
@@ -169,11 +204,6 @@ const Form: React.FC<FormProps> = ({
               fieldName="sellSystemName"
               control={control}
               placeholder="Select a system..."
-              onChange={(newValue) => {
-                setSellSystemStations(
-                  newValue ? ['Station1', 'Station2', 'Station3'] : [],
-                );
-              }}
             />
             <FormErrorMessage>
               {errors.sellSystemName && errors.sellSystemName.message}
@@ -188,23 +218,16 @@ const Form: React.FC<FormProps> = ({
             }
           >
             <FormLabel>Sell to Station</FormLabel>
-            <Select
-              register={register('sellStationName', {
-                disabled: sellSystemStations.length === 0,
-              })}
+            <ChakraReactSelect
+              fieldName="sellStationName"
+              options={sellSystemStations}
+              control={control}
               placeholder={
                 sellSystemStations.length === 0
                   ? 'Enter a system first...'
                   : 'Select a station (optional)'
               }
-            >
-              {sellSystemStations.length &&
-                sellSystemStations.map((station) => (
-                  <option key={station} value={station}>
-                    {station}
-                  </option>
-                ))}
-            </Select>
+            />
             <FormErrorMessage>
               {errors.sellStationName && errors.sellStationName.message}
             </FormErrorMessage>
