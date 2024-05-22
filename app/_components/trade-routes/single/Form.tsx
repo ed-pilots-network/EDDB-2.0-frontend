@@ -53,7 +53,10 @@ export const SingleTradeRouteFormSchema = z.object({
     .string()
     .optional()
     .transform((val) => Number(val)),
-  maxPriceAgeHours: z.number().optional(),
+  maxPriceAgeHours: z
+    .number()
+    .optional()
+    .transform((val) => val || 72),
   cargoCapacity: z
     .string()
     .optional()
@@ -62,7 +65,7 @@ export const SingleTradeRouteFormSchema = z.object({
     .string()
     .optional()
     .transform((val) => Number(val)),
-  maxLandingPadSize: z.string().optional(),
+  maxLandingPadSize: z.string().optional().nullable(),
   maxArrivalDistance: z
     .string()
     .optional()
@@ -97,9 +100,7 @@ const Form: React.FC<FormProps> = ({
     watch,
     formState: { errors },
   } = useForm<SubmitProps>({
-    defaultValues: {
-      maxPriceAgeHours: 72,
-    },
+    defaultValues: {},
     resolver: zodResolver(SingleTradeRouteFormSchema),
   });
   const buySystem = watch('buySystemName', { value: 0, label: '' });
