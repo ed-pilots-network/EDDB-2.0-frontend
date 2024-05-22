@@ -6,7 +6,7 @@ type DefaultEnum = string | number;
 
 interface Props {
   children: ReactNode;
-  defaultValue: DefaultEnum;
+  defaultValue?: DefaultEnum;
   register?: UseFormRegisterReturn;
   placeholder?: string;
   disabled?: boolean;
@@ -14,8 +14,8 @@ interface Props {
 
 const Select = ({
   children,
-  defaultValue,
   register,
+  defaultValue,
   placeholder = 'Select...',
 }: Props) => (
   <ChakraSelect
