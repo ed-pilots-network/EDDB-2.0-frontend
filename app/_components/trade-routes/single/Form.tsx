@@ -54,9 +54,9 @@ export const SingleTradeRouteFormSchema = z.object({
     .optional()
     .transform((val) => Number(val)),
   maxPriceAgeHours: z
-    .number()
+    .string()
     .optional()
-    .transform((val) => val || 72),
+    .transform((val) => Number(val) || 72),
   cargoCapacity: z
     .string()
     .optional()
@@ -65,7 +65,7 @@ export const SingleTradeRouteFormSchema = z.object({
     .string()
     .optional()
     .transform((val) => Number(val)),
-  maxLandingPadSize: z.string().optional().nullable(),
+  maxLandingPadSize: z.string().optional(),
   maxArrivalDistance: z
     .string()
     .optional()
@@ -361,9 +361,7 @@ const Form: React.FC<FormProps> = ({
               }
             >
               <FormLabel>Max Price Age</FormLabel>
-              <Select
-                register={register('maxPriceAgeHours', { valueAsNumber: true })}
-              >
+              <Select register={register('maxPriceAgeHours')} defaultValue={72}>
                 <option value={12}>12 hours</option>
                 <option value={24}>1 day</option>
                 <option value={48}>2 days</option>
