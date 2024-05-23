@@ -8,7 +8,7 @@ interface Props {
 
 export const checkboxValues = [
   { name: 'Orbital', value: 'includeOrbital', checked: true },
-  { name: 'Planetary', value: 'includePlanetary' },
+  { name: 'Planetary', value: 'includeSurfaceStations' },
   { name: 'Odyssey', value: 'includeOdyssey' },
   { name: 'Carriers', value: 'includeFleetCarriers' },
 ];

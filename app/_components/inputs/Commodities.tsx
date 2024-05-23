@@ -51,13 +51,13 @@ const CommoditiesField: React.FC<CommodityProps> = ({
 
   return (
     <Controller
-      name="commodityDisplayName"
+      name="commodityDisplayNames"
       control={control}
       rules={{ required: 'Enter at least one commodity' }}
       render={({ field: { onChange, onBlur, value, name, ref } }) => (
         <Select<CommoditySelectItems, true, GroupBase<CommoditySelectItems>>
-          id="commodityDisplayName"
-          instanceId="commodityDisplayName"
+          id="commodityDisplayNames"
+          instanceId="commodityDisplayNames"
           name={name}
           ref={ref}
           onInputChange={(input) => {

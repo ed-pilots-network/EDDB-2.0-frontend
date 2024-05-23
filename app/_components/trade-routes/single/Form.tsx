@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import GetColor from '@/app/_hooks/colorSelector';
@@ -25,57 +24,7 @@ import { ICommodity } from '@/app/_types';
 import ExpandIcon from '../../utility/ExpandIcon';
 import { useGetData } from '@/app/_lib/api-calls';
 import ChakraReactSelect from '../../inputs/form/ChakraReactSelect';
-
-export const SingleTradeRouteFormSchema = z.object({
-  buySystemName: z
-    .object({ label: z.string(), value: z.number() })
-    .optional()
-    .nullable(),
-  buyStationName: z
-    .object({ label: z.string(), value: z.string() })
-    .optional()
-    .nullable()
-    .transform((val) => val?.value),
-  sellSystemName: z
-    .object({ label: z.string(), value: z.number() })
-    .optional()
-    .nullable(),
-  sellStationName: z
-    .object({ label: z.string(), value: z.string() })
-    .optional()
-    .nullable()
-    .transform((val) => val?.value),
-  commodityDisplayName: z
-    .array(z.object({ value: z.string() }))
-    .optional()
-    .transform((val) => val?.map((v) => v.value)),
-  maxRouteDistance: z
-    .string()
-    .optional()
-    .transform((val) => Number(val)),
-  maxPriceAgeHours: z
-    .string()
-    .optional()
-    .transform((val) => Number(val) || 72),
-  cargoCapacity: z
-    .string()
-    .optional()
-    .transform((val) => Number(val)),
-  availableCredits: z
-    .string()
-    .optional()
-    .transform((val) => Number(val)),
-  maxLandingPadSize: z.string().optional(),
-  maxArrivalDistance: z
-    .string()
-    .optional()
-    .transform((val) => Number(val)),
-  includeFleetCarriers: z.boolean().optional(),
-  includeSurfaceStations: z.boolean().optional(),
-  includeOdyssey: z.boolean().optional(),
-});
-
-export type SubmitProps = z.infer<typeof SingleTradeRouteFormSchema>;
+import { SingleTradeRouteFormSchema, SubmitProps } from './Schema';
 
 interface FormProps {
   onSubmitHandler: SubmitHandler<SubmitProps>;
@@ -103,8 +52,8 @@ const Form: React.FC<FormProps> = ({
     defaultValues: {},
     resolver: zodResolver(SingleTradeRouteFormSchema),
   });
-  const buySystem = watch('buySystemName', { value: 0, label: '' });
-  const sellSystem = watch('sellSystemName', { value: 0, label: '' });
+  const buySystem = watch('buyFromSystemName', { value: 0, label: '' });
+  const sellSystem = watch('sellToSystemName', { value: 0, label: '' });
 
   const { data: buyStationData, mutate: buyStationMutate } = useGetData(
     `exploration/system/list-station-names?systemName=${buySystem?.label}`,
@@ -144,6 +93,10 @@ const Form: React.FC<FormProps> = ({
     onSubmitHandler(data);
   };
 
+  // TODO: cargoCapacity needs to be required and have a default
+  // same goes for maxRouteDistance and maxArrivalDistance
+  // will need to shuffle these inputs out of the collapse
+  // radio options need to return false if not selected
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid
@@ -157,16 +110,18 @@ const Form: React.FC<FormProps> = ({
       >
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
-            isInvalid={!!(errors.buySystemName && errors.buySystemName.message)}
+            isInvalid={
+              !!(errors.buyFromSystemName && errors.buyFromSystemName.message)
+            }
           >
             <FormLabel>Buy From System</FormLabel>
             <SystemsField
-              fieldName="buySystemName"
+              fieldName="buyFromSystemName"
               control={control}
               placeholder="Select a system..."
             />
             <FormErrorMessage>
-              {errors.buySystemName && errors.buySystemName.message}
+              {errors.buyFromSystemName && errors.buyFromSystemName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -174,12 +129,12 @@ const Form: React.FC<FormProps> = ({
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
             isInvalid={
-              !!(errors.buyStationName && errors.buyStationName.message)
+              !!(errors.buyFromStationName && errors.buyFromStationName.message)
             }
           >
             <FormLabel>Buy from Station</FormLabel>
             <ChakraReactSelect
-              fieldName="buyStationName"
+              fieldName="buyFromStationName"
               options={buySystemStations}
               control={control}
               placeholder={
@@ -189,7 +144,7 @@ const Form: React.FC<FormProps> = ({
               }
             />
             <FormErrorMessage>
-              {errors.buyStationName && errors.buyStationName.message}
+              {errors.buyFromStationName && errors.buyFromStationName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -197,17 +152,17 @@ const Form: React.FC<FormProps> = ({
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
             isInvalid={
-              !!(errors.sellSystemName && errors.sellSystemName.message)
+              !!(errors.sellToSystemName && errors.sellToSystemName.message)
             }
           >
             <FormLabel>Sell to System</FormLabel>
             <SystemsField
-              fieldName="sellSystemName"
+              fieldName="sellToSystemName"
               control={control}
               placeholder="Select a system..."
             />
             <FormErrorMessage>
-              {errors.sellSystemName && errors.sellSystemName.message}
+              {errors.sellToSystemName && errors.sellToSystemName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -215,12 +170,12 @@ const Form: React.FC<FormProps> = ({
         <GridItem colSpan={{ base: 1, md: 2 }}>
           <FormControl
             isInvalid={
-              !!(errors.sellStationName && errors.sellStationName.message)
+              !!(errors.sellToStationName && errors.sellToStationName.message)
             }
           >
             <FormLabel>Sell to Station</FormLabel>
             <ChakraReactSelect
-              fieldName="sellStationName"
+              fieldName="sellToStationName"
               options={sellSystemStations}
               control={control}
               placeholder={
@@ -230,7 +185,7 @@ const Form: React.FC<FormProps> = ({
               }
             />
             <FormErrorMessage>
-              {errors.sellStationName && errors.sellStationName.message}
+              {errors.sellToStationName && errors.sellToStationName.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -293,8 +248,8 @@ const Form: React.FC<FormProps> = ({
             <FormControl
               isInvalid={
                 !!(
-                  errors.commodityDisplayName &&
-                  errors.commodityDisplayName.message
+                  errors.commodityDisplayNames &&
+                  errors.commodityDisplayNames.message
                 )
               }
             >
