@@ -92,7 +92,7 @@ describe('Commodities Field', () => {
 
     // Check item is selected
     expect(getByTestId('form')).toHaveFormValues({
-      commodityDisplayName: 'Trillium',
+      commodityDisplayNames: 'Trillium',
     });
 
     act(() => {
@@ -106,7 +106,7 @@ describe('Commodities Field', () => {
 
     // Check both items are selected
     expect(getByTestId('form')).toHaveFormValues({
-      commodityDisplayName: 'Gold',
+      commodityDisplayNames: 'Gold',
     });
   });
 
@@ -135,7 +135,7 @@ describe('Commodities Field', () => {
 
     // Check item is selected
     expect(getByTestId('form')).toHaveFormValues({
-      commodityDisplayName: 'Trillium',
+      commodityDisplayNames: 'Trillium',
     });
 
     act(() => {
@@ -149,7 +149,7 @@ describe('Commodities Field', () => {
 
     // Check both items are selected
     expect(getByTestId('form')).toHaveFormValues({
-      commodityDisplayName: ['Trillium', 'Gold'],
+      commodityDisplayNames: ['Trillium', 'Gold'],
     });
   });
 });
