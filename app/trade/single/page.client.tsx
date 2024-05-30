@@ -6,7 +6,7 @@ import Form from '@/components/trade-routes/single/Form';
 import GetColor from '@/app/_hooks/colorSelector';
 import { ICommodity } from '@/app/_types';
 import PageHeading from '@/app/_components/utility/pageHeading';
-import { SubmitProps } from '@/app/_components/trade-routes/single/Schema';
+import { FormSubmitProps } from '@/app/_components/trade-routes/single/Schema';
 import { useGetData } from '@/app/_lib/api-calls';
 
 interface IPageClientProps {
@@ -23,7 +23,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     mutate: responseMutate,
   } = useGetData(requestUrl);
 
-  function encodeQueryString(obj: SubmitProps) {
+  function encodeQueryString(obj: FormSubmitProps) {
     const params: string[] = [];
     Object.entries(obj).forEach(([k, v]) => {
       if (typeof v === 'undefined') return;
@@ -43,7 +43,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     return params.toString().replaceAll(',', '&');
   }
 
-  const handleSubmit = async (data: SubmitProps) => {
+  const handleSubmit = async (data: FormSubmitProps) => {
     setIsLoading(true);
 
     const queryParams = encodeQueryString(data);

@@ -66,7 +66,7 @@ describe('Stations Form', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('spinbutton', { name: 'Max Route Distance' }),
+      screen.getByRole('spinbutton', { name: 'Max Route Distance - LY' }),
     ).toBeInTheDocument();
 
     expect(
@@ -82,7 +82,7 @@ describe('Stations Form', () => {
     ).toBeInTheDocument();
 
     expect(
-      screen.getByRole('spinbutton', { name: 'Max Distance From Star' }),
+      screen.getByRole('spinbutton', { name: 'Max Distance From Star - LS' }),
     ).toBeInTheDocument();
 
     /* Mocked abstracted fields */

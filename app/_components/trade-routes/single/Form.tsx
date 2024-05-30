@@ -24,10 +24,10 @@ import { ICommodity } from '@/app/_types';
 import ExpandIcon from '../../utility/ExpandIcon';
 import { useGetData } from '@/app/_lib/api-calls';
 import ChakraReactSelect from '../../inputs/form/ChakraReactSelect';
-import { SingleTradeRouteFormSchema, SubmitProps } from './Schema';
+import { FormSubmitProps, FormSubmitSchema } from './Schema';
 
 interface FormProps {
-  onSubmitHandler: SubmitHandler<SubmitProps>;
+  onSubmitHandler: SubmitHandler<FormSubmitProps>;
   isLoading: boolean;
   commodities: ICommodity[] | null;
 }
@@ -48,9 +48,16 @@ const Form: React.FC<FormProps> = ({
     handleSubmit,
     watch,
     formState: { errors },
-  } = useForm<SubmitProps>({
-    defaultValues: {},
-    resolver: zodResolver(SingleTradeRouteFormSchema),
+  } = useForm<FormSubmitProps>({
+    defaultValues: {
+      cargoCapacity: 500,
+      maxRouteDistance: 100,
+      maxArrivalDistance: 1000,
+      includeOdyssey: false,
+      includeSurfaceStations: false,
+      includeFleetCarriers: false,
+    },
+    resolver: zodResolver(FormSubmitSchema),
   });
   const buySystem = watch('buyFromSystemName', { value: 0, label: '' });
   const sellSystem = watch('sellToSystemName', { value: 0, label: '' });
@@ -89,7 +96,7 @@ const Form: React.FC<FormProps> = ({
     if (sellStationData) setSellSystemStations(sellStationData);
   }, [sellStationData]);
 
-  const onSubmit: SubmitHandler<SubmitProps> = (data) => {
+  const onSubmit: SubmitHandler<FormSubmitProps> = (data) => {
     onSubmitHandler(data);
   };
 
@@ -196,19 +203,39 @@ const Form: React.FC<FormProps> = ({
               !!(errors.maxRouteDistance && errors.maxRouteDistance.message)
             }
           >
-            <FormLabel>Max Route Distance</FormLabel>
+            <FormLabel>Max Route Distance - LY</FormLabel>
             <Input
               type="number"
               variant="outline"
-              placeholder="in LY"
               borderColor={GetColor('border')}
               _hover={{
                 borderColor: GetColor('border'),
               }}
-              {...register('maxRouteDistance')}
+              {...register('maxRouteDistance', { valueAsNumber: true })}
             />
             <FormErrorMessage>
               {errors.maxRouteDistance && errors.maxRouteDistance.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.cargoCapacity && errors.cargoCapacity.message)}
+          >
+            <FormLabel>Cargo Capacity</FormLabel>
+            <Input
+              type="number"
+              variant="outline"
+              placeholder="Enter a number..."
+              borderColor={GetColor('border')}
+              _hover={{
+                borderColor: GetColor('border'),
+              }}
+              {...register('cargoCapacity', { valueAsNumber: true })}
+            />
+            <FormErrorMessage>
+              {errors.cargoCapacity && errors.cargoCapacity.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>
@@ -266,29 +293,6 @@ const Form: React.FC<FormProps> = ({
           <GridItem>
             <FormControl
               isInvalid={
-                !!(errors.cargoCapacity && errors.cargoCapacity.message)
-              }
-            >
-              <FormLabel>Cargo Capacity</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                placeholder="Enter a number..."
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('cargoCapacity')}
-              />
-              <FormErrorMessage>
-                {errors.cargoCapacity && errors.cargoCapacity.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={
                 !!(errors.availableCredits && errors.availableCredits.message)
               }
             >
@@ -336,16 +340,15 @@ const Form: React.FC<FormProps> = ({
                 )
               }
             >
-              <FormLabel>Max Distance From Star</FormLabel>
+              <FormLabel>Max Distance From Star - LS</FormLabel>
               <Input
                 type="number"
                 variant="outline"
-                placeholder="In LS"
                 borderColor={GetColor('border')}
                 _hover={{
                   borderColor: GetColor('border'),
                 }}
-                {...register('maxArrivalDistance')}
+                {...register('maxArrivalDistance', { valueAsNumber: true })}
               />
               <FormErrorMessage>
                 {errors.maxArrivalDistance && errors.maxArrivalDistance.message}
