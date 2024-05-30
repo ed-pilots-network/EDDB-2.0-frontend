@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 // Purpose: API calls to the backend - name ending with Server are used in page.tsx, name ending with Client are used in page.client.tsx
-import useSWR from 'swr';
+import useSWR, { KeyedMutator } from 'swr';
 
 const now = new Date().toISOString();
 
@@ -67,17 +67,26 @@ const useGetMockSubmitFormClient = (queryString: string) => {
   };
 };
 
+interface SWR {
+  error: any | undefined;
+  isLoading: boolean;
+  mutate: KeyedMutator<any>;
+}
+
+type CustomResponse<T> = T & SWR;
+
 // typical request fetching data from staging URL
-const useGetData = (queryString: string) => {
-  const { data, error, isLoading, mutate } = useSWR(
-    `${process.env.NEXT_PUBLIC_STAGING_API_URL}/api/v1/${queryString}`,
-    fetcher,
-    {
-      shouldRetryOnError: false,
-      revalidateOnFocus: false,
-      revalidateOnMount: false,
-    },
-  );
+const useGetData = <T,>(queryString: string) => {
+  const { data, error, isLoading, mutate }: CustomResponse<{ data: T }> =
+    useSWR(
+      `${process.env.NEXT_PUBLIC_STAGING_API_URL}/api/v1/${queryString}`,
+      fetcher,
+      {
+        shouldRetryOnError: false,
+        revalidateOnFocus: false,
+        revalidateOnMount: false,
+      },
+    );
 
   return {
     data,

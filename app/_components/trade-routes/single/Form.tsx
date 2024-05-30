@@ -20,11 +20,11 @@ import {
   HStack,
   Collapse,
 } from '@chakra-ui/react';
-import { ICommodity } from '@/app/_types';
 import ExpandIcon from '../../utility/ExpandIcon';
 import { useGetData } from '@/app/_lib/api-calls';
 import ChakraReactSelect from '../../inputs/form/ChakraReactSelect';
 import { FormSubmitProps, FormSubmitSchema } from './Schema';
+import { ICommodity } from '@/app/_types';
 
 interface FormProps {
   onSubmitHandler: SubmitHandler<FormSubmitProps>;
@@ -62,13 +62,13 @@ const Form: React.FC<FormProps> = ({
   const buySystem = watch('buyFromSystemName', { value: 0, label: '' });
   const sellSystem = watch('sellToSystemName', { value: 0, label: '' });
 
-  const { data: buyStationData, mutate: buyStationMutate } = useGetData(
-    `exploration/system/list-station-names?systemName=${buySystem?.label}`,
-  );
+  const { data: buyStationData, mutate: buyStationMutate } = useGetData<
+    string[]
+  >(`exploration/system/list-station-names?systemName=${buySystem?.label}`);
 
-  const { data: sellStationData, mutate: sellStationMutate } = useGetData(
-    `exploration/system/list-station-names?systemName=${sellSystem?.label}`,
-  );
+  const { data: sellStationData, mutate: sellStationMutate } = useGetData<
+    string[]
+  >(`exploration/system/list-station-names?systemName=${sellSystem?.label}`);
 
   useEffect(() => {
     const systemName = buySystem?.label;
