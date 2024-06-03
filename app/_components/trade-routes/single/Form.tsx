@@ -19,6 +19,8 @@ import {
   FormErrorMessage,
   HStack,
   Collapse,
+  InputGroup,
+  InputRightAddon,
 } from '@chakra-ui/react';
 import ExpandIcon from '../../utility/ExpandIcon';
 import { useGetData } from '@/app/_lib/api-calls';
@@ -203,16 +205,22 @@ const Form: React.FC<FormProps> = ({
               !!(errors.maxRouteDistance && errors.maxRouteDistance.message)
             }
           >
-            <FormLabel>Max Route Distance - LY</FormLabel>
-            <Input
-              type="number"
-              variant="outline"
-              borderColor={GetColor('border')}
-              _hover={{
-                borderColor: GetColor('border'),
-              }}
-              {...register('maxRouteDistance', { valueAsNumber: true })}
-            />
+            <FormLabel>Max Route Distance</FormLabel>
+            <InputGroup>
+              <Input
+                type="number"
+                variant="outline"
+                borderColor={GetColor('border')}
+                borderRight={0}
+                _hover={{
+                  borderColor: GetColor('border'),
+                }}
+                {...register('maxRouteDistance', { valueAsNumber: true })}
+              />
+              <InputRightAddon borderColor={GetColor('border')} borderLeft={0}>
+                LY
+              </InputRightAddon>
+            </InputGroup>
             <FormErrorMessage>
               {errors.maxRouteDistance && errors.maxRouteDistance.message}
             </FormErrorMessage>
@@ -340,16 +348,25 @@ const Form: React.FC<FormProps> = ({
                 )
               }
             >
-              <FormLabel>Max Distance From Star - LS</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('maxArrivalDistance', { valueAsNumber: true })}
-              />
+              <FormLabel>Max Distance From Star</FormLabel>
+              <InputGroup>
+                <Input
+                  type="number"
+                  variant="outline"
+                  borderColor={GetColor('border')}
+                  borderRight={0}
+                  _hover={{
+                    borderColor: GetColor('border'),
+                  }}
+                  {...register('maxArrivalDistance', { valueAsNumber: true })}
+                />
+                <InputRightAddon
+                  borderColor={GetColor('border')}
+                  borderLeft={0}
+                >
+                  LS
+                </InputRightAddon>
+              </InputGroup>
               <FormErrorMessage>
                 {errors.maxArrivalDistance && errors.maxArrivalDistance.message}
               </FormErrorMessage>
