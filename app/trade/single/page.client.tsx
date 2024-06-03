@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, HStack, Flex, Text } from '@chakra-ui/react';
+import { Box, HStack, Flex, Text, Heading } from '@chakra-ui/react';
 import Form from '@/components/trade-routes/single/Form';
 import GetColor from '@/app/_hooks/colorSelector';
 import PageHeading from '@/app/_components/utility/pageHeading';
@@ -47,6 +47,21 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     return params.toString().replaceAll(',', '&');
   }
 
+  // TODO: delete this after finishing the form response
+  const handleTempSubmit = async () => {
+    const tempParams =
+      'sellToSystemName=Sol&commodityDisplayNames=Gold&maxRouteDistance=50&maxPriceAgeHours=72&cargoCapacity=500&availableCredits=0&maxLandingPadSize=LARGE&maxArrivalDistance=1000&includeFleetCarriers=false&includeSurfaceStations=false&includeOdyssey=false';
+    setIsLoading(true);
+    const queryUrl = `trade/locate-trade/single?${tempParams}`;
+    setRequestUrl(queryUrl);
+    if (requestUrl !== '') await responseMutate();
+
+    if (responseData)
+      console.log("submitted! here's the response", responseData);
+
+    setIsLoading(false);
+  };
+
   const handleSubmit = async (data: FormSubmitProps) => {
     setIsLoading(true);
 
@@ -83,10 +98,19 @@ const PageClient = ({ commodities }: IPageClientProps) => {
       >
         <Form
           onSubmitHandler={handleSubmit}
+          tempSubmitHandler={handleTempSubmit}
           isLoading={isLoading}
           commodities={commodities}
         />
       </Box>
+      {responseData?.length > 0 && (
+        <>
+          <Heading as="h2" fontSize="2xl">
+            Response
+          </Heading>
+          <Text>Number of results: {responseData.length}</Text>
+        </>
+      )}
     </Flex>
   );
 };

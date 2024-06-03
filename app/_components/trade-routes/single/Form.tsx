@@ -32,12 +32,14 @@ interface FormProps {
   onSubmitHandler: SubmitHandler<FormSubmitProps>;
   isLoading: boolean;
   commodities: ICommodity[] | null;
+  tempSubmitHandler: () => void;
 }
 
 const Form: React.FC<FormProps> = ({
   onSubmitHandler,
   isLoading,
   commodities,
+  tempSubmitHandler,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -102,10 +104,6 @@ const Form: React.FC<FormProps> = ({
     onSubmitHandler(data);
   };
 
-  // TODO: cargoCapacity needs to be required and have a default
-  // same goes for maxRouteDistance and maxArrivalDistance
-  // will need to shuffle these inputs out of the collapse
-  // radio options need to return false if not selected
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid
@@ -390,6 +388,15 @@ const Form: React.FC<FormProps> = ({
           isLoading={isLoading}
         >
           Find Routes
+        </Button>
+        <Button
+          type="button"
+          variant="submit"
+          id="submit-temp"
+          isLoading={isLoading}
+          onClick={tempSubmitHandler}
+        >
+          Test Route
         </Button>
         <ExpandIcon isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
       </HStack>
