@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, HStack, Flex, Text, Heading } from '@chakra-ui/react';
+import { Box, HStack, Flex, Text } from '@chakra-ui/react';
 import Form from '@/components/trade-routes/single/Form';
 import GetColor from '@/app/_hooks/colorSelector';
 import PageHeading from '@/app/_components/utility/pageHeading';
@@ -11,6 +11,7 @@ import {
   FormSubmitProps,
 } from '@/app/_components/trade-routes/single/Schema';
 import { ICommodity } from '@/app/_types';
+import Response from '@/app/_components/trade-routes/single/Response';
 
 interface IPageClientProps {
   commodities: ICommodity[] | null;
@@ -103,14 +104,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
           commodities={commodities}
         />
       </Box>
-      {responseData?.length > 0 && (
-        <>
-          <Heading as="h2" fontSize="2xl">
-            Response
-          </Heading>
-          <Text>Number of results: {responseData.length}</Text>
-        </>
-      )}
+      {responseData?.length > 0 && <Response results={responseData} />}
     </Flex>
   );
 };
