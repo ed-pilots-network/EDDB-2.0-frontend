@@ -57,9 +57,10 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     setRequestUrl(queryUrl);
     if (requestUrl !== '') await responseMutate();
 
-    if (responseData)
+    if (responseData){
       console.log("submitted! here's the response", responseData);
-
+    }
+    
     setIsLoading(false);
   };
 
@@ -69,14 +70,19 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     const queryParams = encodeQueryString(data);
     const queryUrl = `trade/locate-trade/single?${queryParams}`;
     setRequestUrl(queryUrl);
-    if (requestUrl !== '') await responseMutate();
+    if (requestUrl !== '') {
+      await responseMutate();
+    }
 
     // TODO: we'll use availableCredits with cargoCapacity to present overall profit
     // once the response returns with profit per unit
     // includeOdyssey isn't being filtered atm
+    
+    
 
     const res = responseError ?? responseData;
     console.log("submitted! here's the response", res);
+    
     setIsLoading(false);
   };
 
@@ -104,7 +110,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
           commodities={commodities}
         />
       </Box>
-      {responseData?.length > 0 && <Response results={responseData} />}
+      {responseData?.length > 0 && <Response cargoCapacity={1} results={responseData} />}
     </Flex>
   );
 };
