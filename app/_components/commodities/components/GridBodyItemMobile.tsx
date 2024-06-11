@@ -5,7 +5,7 @@ import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { formatThousands } from '@/app/_hooks/textFormatting';
 import { Flex, Icon, Tbody, Td, Text, Tr } from '@chakra-ui/react';
 import { ICommodityFormResponse } from '@/app/_types/commodity';
-import { renderStationTypeIcon } from '@/components/utility/common-components';
+import { RenderStationTypeIcon } from '@/components/utility/common-components';
 import { calculateTimeDifference } from '@/components/utility/common-functions';
 import GetColor from '@/app/_hooks/colorSelector';
 
@@ -29,7 +29,7 @@ const GridBodyItemMobile: React.FC<IGridBodyItemProps> = ({
         <Text>Station Name: {commodity.station.name}</Text>
         <Flex gap={2}>
           Station Type:
-          {renderStationTypeIcon(commodity.station, isDark)}
+          <RenderStationTypeIcon station={commodity.station} isDark={isDark} />
         </Flex>
         <Text>
           Arrival Distance: {commodity.station.arrivalDistance ?? '?'} ls
