@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, HStack, Flex, Text } from '@chakra-ui/react';
+import { Box, HStack, Flex, Text, useMediaQuery } from '@chakra-ui/react';
 import Form from '@/components/trade-routes/single/Form';
 import GetColor from '@/app/_hooks/colorSelector';
 import PageHeading from '@/app/_components/utility/pageHeading';
@@ -10,8 +10,9 @@ import {
   FormResponseProps,
   FormSubmitProps,
 } from '@/app/_components/trade-routes/single/Schema';
-import { ICommodity } from '@/app/_types';
 import Response from '@/app/_components/trade-routes/single/Response';
+import SingleTradeResponseDesktop from '@/app/_components/trade-routes/single/response/ResponseDesktop';
+import type { ICommodity } from '@/app/_types';
 
 interface IPageClientProps {
   commodities: ICommodity[] | null;
@@ -20,6 +21,8 @@ interface IPageClientProps {
 const PageClient = ({ commodities }: IPageClientProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [requestUrl, setRequestUrl] = useState('');
+  const [cargoCapacity, setCargoCapacity] = useState(1);
+  const [isLarge] = useMediaQuery('(min-width: 1024px)');
 
   const {
     data: responseData,
@@ -55,12 +58,13 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     setIsLoading(true);
     const queryUrl = `trade/locate-trade/single?${tempParams}`;
     setRequestUrl(queryUrl);
+    setCargoCapacity(500);
     if (requestUrl !== '') await responseMutate();
 
-    if (responseData){
+    if (responseData) {
       console.log("submitted! here's the response", responseData);
     }
-    
+
     setIsLoading(false);
   };
 
@@ -70,6 +74,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     const queryParams = encodeQueryString(data);
     const queryUrl = `trade/locate-trade/single?${queryParams}`;
     setRequestUrl(queryUrl);
+    setCargoCapacity(data.cargoCapacity);
     if (requestUrl !== '') {
       await responseMutate();
     }
@@ -77,13 +82,22 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     // TODO: we'll use availableCredits with cargoCapacity to present overall profit
     // once the response returns with profit per unit
     // includeOdyssey isn't being filtered atm
-    
-    
 
     const res = responseError ?? responseData;
     console.log("submitted! here's the response", res);
-    
+
     setIsLoading(false);
+  };
+
+  const checkBreakpointBeforeShowingResponse = () => {
+    if (isLarge)
+      return (
+        <SingleTradeResponseDesktop
+          results={responseData}
+          cargoCapacity={cargoCapacity}
+        />
+      );
+    return <Text>Mobile Response</Text>;
   };
 
   return (
@@ -110,7 +124,10 @@ const PageClient = ({ commodities }: IPageClientProps) => {
           commodities={commodities}
         />
       </Box>
-      {responseData?.length > 0 && <Response cargoCapacity={1} results={responseData} />}
+      {responseData?.length > 0 && (
+        <Response cargoCapacity={cargoCapacity} results={responseData} />
+      )}
+      {responseData?.length > 0 && checkBreakpointBeforeShowingResponse()}
     </Flex>
   );
 };

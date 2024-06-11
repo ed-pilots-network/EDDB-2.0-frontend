@@ -1,4 +1,4 @@
-import { IStation } from './celestial_objects';
+import type { IStation } from './celestial_objects';
 
 export interface ICommodity {
   commodityName: string;

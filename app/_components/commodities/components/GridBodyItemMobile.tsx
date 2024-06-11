@@ -5,7 +5,8 @@ import { faArrowUp, faArrowDown } from '@fortawesome/free-solid-svg-icons';
 import { formatThousands } from '@/app/_hooks/textFormatting';
 import { Flex, Icon, Tbody, Td, Text, Tr } from '@chakra-ui/react';
 import { ICommodityFormResponse } from '@/app/_types/commodity';
-import { calculateTimeDifference, renderStationTypeIcon } from '../helpers';
+import { renderStationTypeIcon } from '@/components/utility/common-components';
+import { calculateTimeDifference } from '@/components/utility/common-functions';
 import GetColor from '@/app/_hooks/colorSelector';
 
 interface IGridBodyItemProps {

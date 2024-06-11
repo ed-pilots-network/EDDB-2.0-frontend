@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 
 import { VStack } from '@chakra-ui/react';
-import { compareNumbers, legendItems, legendItemsDark } from './helpers';
+import {
+  legendItems,
+  legendItemsDark,
+} from '@/components/utility/common-components';
+import { compareNumbers } from '@/components/utility/common-functions';
 import { FormResponseHeading, GridHeadings, GridBodyItem } from './components';
 import GetColor from '@/app/_hooks/colorSelector';
 import useColorMode from '@/app/_hooks/useColorMode';
-import { ICommodityFormResponse } from '@/types/index';
+import type { ICommodityFormResponse } from '@/types/index';
 
 interface ICommodityFormResponseProps {
   commodityResponse: ICommodityFormResponse[];
