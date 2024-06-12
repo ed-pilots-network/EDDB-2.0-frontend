@@ -10,7 +10,7 @@ import {
   FormResponseProps,
   FormSubmitProps,
 } from '@/app/_components/trade-routes/single/Schema';
-import Response from '@/app/_components/trade-routes/single/Response';
+// import Response from '@/app/_components/trade-routes/single/Response';
 import SingleTradeResponseDesktop from '@/app/_components/trade-routes/single/response/ResponseDesktop';
 import type { ICommodity } from '@/app/_types';
 
@@ -124,9 +124,9 @@ const PageClient = ({ commodities }: IPageClientProps) => {
           commodities={commodities}
         />
       </Box>
-      {responseData?.length > 0 && (
-        <Response cargoCapacity={cargoCapacity} results={responseData} />
-      )}
+      {/* {responseData?.length > 0 && ( */}
+      {/*   <Response cargoCapacity={cargoCapacity} results={responseData} /> */}
+      {/* )} */}
       {responseData?.length > 0 && checkBreakpointBeforeShowingResponse()}
     </Flex>
   );

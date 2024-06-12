@@ -48,7 +48,7 @@ const ResponseHeadings: React.FC<IGridHeadingsProps> = ({
 
   return (
     <Grid
-      gridTemplateColumns={'90px 120px 1fr 3fr 3fr 100px'}
+      gridTemplateColumns={'30px 90px 120px 1fr 3fr 3fr 100px'}
       rowGap="1"
       width="100%"
       fontSize="sm"
