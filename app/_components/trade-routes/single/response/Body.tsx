@@ -46,7 +46,7 @@ const ResponseBody = ({
     `;
 
   const toggleItemCard = () => (
-    <Box overflow="hidden" width="100%">
+    <Box overflow="hidden" width="100%" boxShadow="2xl" roundedTop="md">
       <Card
         variant="unstyled"
         bg="inherit"
