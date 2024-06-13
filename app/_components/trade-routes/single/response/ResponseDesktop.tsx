@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Text, VStack } from '@chakra-ui/react';
+import { VStack } from '@chakra-ui/react';
 import GetColor from '@/app/_hooks/colorSelector';
 import ResponseLegend from './Legend';
 import ResponseBody from './Body';
@@ -20,10 +20,8 @@ const SingleTradeResponseDesktop = ({
     borderWidth="2px"
     borderRadius="9px"
     borderColor={GetColor('border')}
-    bg={GetColor('')}
     padding="1rem"
   >
-    <Text>Desktop Response</Text>
     <ResponseLegend />
     {results.length > 0 && (
       <VStack width="100%">
