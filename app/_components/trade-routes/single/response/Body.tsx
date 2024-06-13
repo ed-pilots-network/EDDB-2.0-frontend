@@ -29,9 +29,11 @@ import GridRowExpandIcon from '@/app/_components/utility/GridExpandIcon';
 import type { FormResponseProps } from '../Schema';
 
 const ResponseBody = ({
+  index,
   data,
   cargoCapacity,
 }: {
+  index: number;
   data: FormResponseProps;
   cargoCapacity: number;
 }) => {
@@ -49,19 +51,18 @@ const ResponseBody = ({
         variant="unstyled"
         bg="inherit"
         direction={{ base: 'column', sm: 'row' }}
-        animation={`${expand} 0.2s linear`}
         fontSize="sm"
         size="sm"
         width="100%"
+        backgroundColor={index % 2 ? 'black.3' : 'blue.8'}
       >
         <CardBody lineHeight={2}>
-          <Grid
-            gridTemplateColumns={'2fr 4fr 4fr 1fr'}
-            rowGap="1"
-            padding={4}
-            width="100%"
-          >
-            <VStack alignItems="start">
+          <Grid gridTemplateColumns={'2fr 4fr 4fr 1fr'} rowGap="1" width="100%">
+            <VStack
+              alignItems="start"
+              padding={4}
+              animation={`${expand} 0.2s linear`}
+            >
               <HStack>
                 <Text>Profit Per: </Text>
                 <Text color={GetColor('border-accent')}>{`${formatThousands(
@@ -81,25 +82,48 @@ const ResponseBody = ({
                 </Text>
               </HStack>
             </VStack>
-            <VStack alignItems="start">
-              <HStack>
-                <Text>Supply: </Text>
-                <Text color={GetColor('border-accent')}>{`${formatThousands(
-                  data.stock,
-                )} units`}</Text>
-              </HStack>
-              <HStack>
-                <Text>Buy Price: </Text>
-                <Text color={GetColor('border-accent')}>{`${formatThousands(
-                  data.buyPrice,
-                )} cr`}</Text>
-              </HStack>
-              <Text>
-                Last Updated:{' '}
-                {calculateTimeDifference(data.buyFromStationDto.marketUpdateAt)}
-              </Text>
-            </VStack>
-            <VStack alignItems="start">
+            <HStack
+              backgroundColor={index % 2 ? 'black.1' : 'blue.7'}
+              justifyContent="space-between"
+            >
+              <VStack
+                alignItems="start"
+                padding={4}
+                animation={`${expand} 0.2s linear`}
+              >
+                <HStack>
+                  <Text>Supply: </Text>
+                  <Text color={GetColor('border-accent')}>{`${formatThousands(
+                    data.stock,
+                  )} units`}</Text>
+                </HStack>
+                <HStack>
+                  <Text>Buy Price: </Text>
+                  <Text color={GetColor('border-accent')}>{`${formatThousands(
+                    data.buyPrice,
+                  )} cr`}</Text>
+                </HStack>
+                <Text>
+                  Last Updated:{' '}
+                  {calculateTimeDifference(
+                    data.buyFromStationDto.marketUpdateAt,
+                  )}
+                </Text>
+              </VStack>
+              <Box
+                borderTop={`75px solid`}
+                borderTopColor={index % 2 ? 'black.3' : 'blue.8'}
+                borderLeft={`55px solid`}
+                borderLeftColor={index % 2 ? 'black.1' : 'blue.7'}
+                borderBottom={`75px solid`}
+                borderBottomColor={index % 2 ? 'black.3' : 'blue.8'}
+              />
+            </HStack>
+            <VStack
+              alignItems="start"
+              padding={4}
+              animation={`${expand} 0.2s linear`}
+            >
               <HStack>
                 <Text>Demand: </Text>
                 <Text color={GetColor('border-accent')}>{`${formatThousands(

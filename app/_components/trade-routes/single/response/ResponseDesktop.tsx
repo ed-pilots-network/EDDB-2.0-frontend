@@ -34,6 +34,7 @@ const SingleTradeResponseDesktop = ({
           .map((result, index) => (
             <ResponseBody
               key={index}
+              index={index}
               data={result}
               cargoCapacity={cargoCapacity}
             />
