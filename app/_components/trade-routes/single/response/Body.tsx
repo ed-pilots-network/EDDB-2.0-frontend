@@ -53,10 +53,34 @@ const ResponseBody = ({
         fontSize="sm"
         size="sm"
         width="100%"
-        padding={4}
       >
         <CardBody lineHeight={2}>
-          <HStack justify="center" columnGap={8}>
+          <Grid
+            gridTemplateColumns={'2fr 4fr 4fr 1fr'}
+            rowGap="1"
+            padding={4}
+            width="100%"
+          >
+            <VStack alignItems="start">
+              <HStack>
+                <Text>Profit Per: </Text>
+                <Text color={GetColor('border-accent')}>{`${formatThousands(
+                  data.profit,
+                )} cr`}</Text>
+              </HStack>
+              <HStack>
+                <Text>Shortage: </Text>
+                <Text color={GetColor('border-accent')}>{`${formatThousands(
+                  Math.round(data.demand - data.stock),
+                )} units`}</Text>
+              </HStack>
+              <HStack>
+                <Text>Commodity:</Text>
+                <Text color={GetColor('border-accent')}>
+                  {data.commodityDto.displayName}
+                </Text>
+              </HStack>
+            </VStack>
             <VStack alignItems="start">
               <HStack>
                 <Text>Supply: </Text>
@@ -93,27 +117,7 @@ const ResponseBody = ({
                 {calculateTimeDifference(data.sellToStationDto.marketUpdateAt)}
               </Text>
             </VStack>
-            <VStack alignItems="start">
-              <HStack>
-                <Text>Shortage: </Text>
-                <Text color={GetColor('border-accent')}>{`${formatThousands(
-                  Math.round(data.demand - data.stock),
-                )} units`}</Text>
-              </HStack>
-              <HStack>
-                <Text>Profit Per: </Text>
-                <Text color={GetColor('border-accent')}>{`${formatThousands(
-                  data.profit,
-                )} cr`}</Text>
-              </HStack>
-              <HStack>
-                <Text>Commodity:</Text>
-                <Text color={GetColor('border-accent')}>
-                  {data.commodityDto.displayName}
-                </Text>
-              </HStack>
-            </VStack>
-          </HStack>
+          </Grid>
         </CardBody>
       </Card>
     </Box>
