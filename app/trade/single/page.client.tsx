@@ -1,7 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, HStack, Flex, Text, useMediaQuery } from '@chakra-ui/react';
+import {
+  Box,
+  HStack,
+  Flex,
+  Text,
+  useMediaQuery,
+  Fade,
+  Alert,
+  AlertIcon,
+} from '@chakra-ui/react';
 import Form from '@/components/trade-routes/single/Form';
 import GetColor from '@/app/_hooks/colorSelector';
 import PageHeading from '@/app/_components/utility/pageHeading';
@@ -10,7 +19,6 @@ import {
   FormResponseProps,
   FormSubmitProps,
 } from '@/app/_components/trade-routes/single/Schema';
-// import Response from '@/app/_components/trade-routes/single/Response';
 import SingleTradeResponseDesktop from '@/app/_components/trade-routes/single/response/ResponseDesktop';
 import type { ICommodity } from '@/app/_types';
 
@@ -20,6 +28,7 @@ interface IPageClientProps {
 
 const PageClient = ({ commodities }: IPageClientProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [requestUrl, setRequestUrl] = useState('');
   const [cargoCapacity, setCargoCapacity] = useState(1);
   const [isLarge] = useMediaQuery('(min-width: 1024px)');
@@ -30,7 +39,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     mutate: responseMutate,
   } = useGetData<FormResponseProps[]>(requestUrl);
 
-  // TODO: this is messy. can it be made universal and extracted?
+  // this is messy. can it be made universal and extracted?
   function encodeQueryString(obj: FormSubmitProps) {
     const params: string[] = [];
     Object.entries(obj).forEach(([k, v]) => {
@@ -53,9 +62,11 @@ const PageClient = ({ commodities }: IPageClientProps) => {
 
   // TODO: delete this after finishing the form response
   const handleTempSubmit = async () => {
+    setIsLoading(true);
+    setIsSubmitted(false);
+
     const tempParams =
       'sellToSystemName=Sol&commodityDisplayNames=Gold&maxRouteDistance=50&maxPriceAgeHours=72&cargoCapacity=500&availableCredits=0&maxLandingPadSize=LARGE&maxArrivalDistance=1000&includeFleetCarriers=false&includeSurfaceStations=false&includeOdyssey=false';
-    setIsLoading(true);
     const queryUrl = `trade/locate-trade/single?${tempParams}`;
     setRequestUrl(queryUrl);
     setCargoCapacity(500);
@@ -65,12 +76,17 @@ const PageClient = ({ commodities }: IPageClientProps) => {
       console.log("submitted! here's the response", responseData);
     }
 
-    setIsLoading(false);
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsSubmitted(true);
+    }, 700);
   };
 
   const handleSubmit = async (data: FormSubmitProps) => {
     setIsLoading(true);
+    setIsSubmitted(false);
 
+    // includeOdyssey isn't being filtered atm
     const queryParams = encodeQueryString(data);
     const queryUrl = `trade/locate-trade/single?${queryParams}`;
     setRequestUrl(queryUrl);
@@ -79,23 +95,21 @@ const PageClient = ({ commodities }: IPageClientProps) => {
       await responseMutate();
     }
 
-    // TODO: we'll use availableCredits with cargoCapacity to present overall profit
-    // once the response returns with profit per unit
-    // includeOdyssey isn't being filtered atm
-
-    const res = responseError ?? responseData;
-    console.log("submitted! here's the response", res);
-
-    setIsLoading(false);
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsSubmitted(true);
+    }, 700);
   };
 
   const checkBreakpointBeforeShowingResponse = () => {
     if (isLarge)
       return (
-        <SingleTradeResponseDesktop
-          results={responseData}
-          cargoCapacity={cargoCapacity}
-        />
+        <Fade in={responseData.length > 0} style={{ width: '100%' }}>
+          <SingleTradeResponseDesktop
+            results={responseData}
+            cargoCapacity={cargoCapacity}
+          />
+        </Fade>
       );
     return <Text>Mobile Response</Text>;
   };
@@ -124,9 +138,18 @@ const PageClient = ({ commodities }: IPageClientProps) => {
           commodities={commodities}
         />
       </Box>
-      {/* {responseData?.length > 0 && ( */}
-      {/*   <Response cargoCapacity={cargoCapacity} results={responseData} /> */}
-      {/* )} */}
+      {responseData && responseData.length === 0 && isSubmitted && (
+        <Alert status="warning" borderRadius="md">
+          <AlertIcon />
+          No results found!
+        </Alert>
+      )}
+      {responseError && isSubmitted && (
+        <Alert status="error">
+          <AlertIcon />
+          Failed to fetch data!
+        </Alert>
+      )}
       {responseData?.length > 0 && checkBreakpointBeforeShowingResponse()}
     </Flex>
   );

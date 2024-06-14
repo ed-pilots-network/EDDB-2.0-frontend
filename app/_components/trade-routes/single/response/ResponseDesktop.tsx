@@ -23,22 +23,16 @@ const SingleTradeResponseDesktop = ({
     padding="1rem"
   >
     <ResponseLegend />
-    {results.length > 0 && (
-      <VStack width="100%">
-        {results
-          .sort(
-            (a: FormResponseProps, b: FormResponseProps) => b.profit - a.profit,
-          )
-          .map((result, index) => (
-            <ResponseBody
-              key={index}
-              index={index}
-              data={result}
-              cargoCapacity={cargoCapacity}
-            />
-          ))}
-      </VStack>
-    )}
+    {results
+      .sort((a: FormResponseProps, b: FormResponseProps) => b.profit - a.profit)
+      .map((result, index) => (
+        <ResponseBody
+          key={index}
+          index={index}
+          data={result}
+          cargoCapacity={cargoCapacity}
+        />
+      ))}
   </VStack>
 );
 
