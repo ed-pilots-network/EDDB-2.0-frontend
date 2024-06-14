@@ -27,7 +27,7 @@ import useColorMode from '@/app/_hooks/useColorMode';
 import { calculateTimeDifference } from '@/app/_components/utility/common-functions';
 import GridRowExpandIcon from '@/app/_components/utility/GridExpandIcon';
 import { orbitron } from '@/app/_config/theme/fonts';
-import type { FormResponseProps } from '../Schema';
+import type { FormResponseProps } from '../../Schema';
 
 const ResponseBody = ({
   index,
@@ -60,7 +60,9 @@ const ResponseBody = ({
   const calcMaxTrades = (supply: number, demand: number) => {
     const supplyRatioToCargo = Math.round(supply / cargoCapacity);
     const demandRatioToCargo = Math.round(demand / cargoCapacity);
-    return Math.min(supplyRatioToCargo, demandRatioToCargo);
+    const min = Math.min(supplyRatioToCargo, demandRatioToCargo);
+    if (min > 1) return `${min} trades`;
+    return `${min} trade`;
   };
 
   const toggleItemCard = () => (
@@ -91,10 +93,9 @@ const ResponseBody = ({
                 >
                   Max Trades:{' '}
                 </Text>
-                <Text color={selectTextColorAccent}>{`${calcMaxTrades(
-                  data.stock,
-                  data.demand,
-                )} trades`}</Text>
+                <Text color={selectTextColorAccent}>
+                  {calcMaxTrades(data.stock, data.demand)}
+                </Text>
               </HStack>
               <HStack>
                 <Text
@@ -262,7 +263,7 @@ const ResponseBody = ({
             <HStack>
               <Text className={orbitron.className}>Profit: </Text>
               <Text color={selectTextColorAccent} fontWeight="700">
-                {` ${formatThousands(cargoCapacity * data.profit)} cr`}
+                {` ${formatThousands(data.profit * cargoCapacity)} cr`}
               </Text>
             </HStack>
           </VStack>

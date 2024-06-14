@@ -2,9 +2,9 @@ import React from 'react';
 
 import { VStack } from '@chakra-ui/react';
 import GetColor from '@/app/_hooks/colorSelector';
-import ResponseLegend from './Legend';
-import ResponseBody from './Body';
-import type { FormResponseProps } from '../Schema';
+import ResponseLegend from '../Legend';
+import ResponseBody from './BodyDesktop';
+import type { FormResponseProps } from '../../Schema';
 
 const SingleTradeResponseDesktop = ({
   results,

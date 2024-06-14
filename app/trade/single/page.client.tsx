@@ -19,7 +19,8 @@ import {
   FormResponseProps,
   FormSubmitProps,
 } from '@/app/_components/trade-routes/single/Schema';
-import SingleTradeResponseDesktop from '@/app/_components/trade-routes/single/response/ResponseDesktop';
+import SingleTradeResponseDesktop from '@/app/_components/trade-routes/single/response/desktop/ResponseDesktop';
+import SingleTradeResponseMobile from '@/app/_components/trade-routes/single/response/mobile/ResponseMobile';
 import type { ICommodity } from '@/app/_types';
 
 interface IPageClientProps {
@@ -111,7 +112,14 @@ const PageClient = ({ commodities }: IPageClientProps) => {
           />
         </Fade>
       );
-    return <Text>Mobile Response</Text>;
+    return (
+      <Fade in={responseData.length > 0} style={{ width: '100%' }}>
+        <SingleTradeResponseMobile
+          results={responseData}
+          cargoCapacity={cargoCapacity}
+        />
+      </Fade>
+    );
   };
 
   return (
