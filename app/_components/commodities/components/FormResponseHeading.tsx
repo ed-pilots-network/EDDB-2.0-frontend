@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { Flex, HStack, Heading, Image, Text, VStack } from '@chakra-ui/react';
-import PageHeading from '@/components/utility/pageHeading';
+import PageHeading from '../../utility/pageHeading';
 import type { ICommodityFormResponse } from '@/types/index';
 
 interface IFormResponseHeadProps {

@@ -3,8 +3,8 @@ import React from 'react';
 import { formatThousands } from '@/app/_hooks/textFormatting';
 import { GridItem, SimpleGrid, Text } from '@chakra-ui/react';
 import GetColor from '@/app/_hooks/colorSelector';
-import { RenderStationTypeIcon } from '@/components/utility/common-components';
-import { calculateTimeDifference } from '@/components/utility/common-functions';
+import { RenderStationTypeIcon } from '../../utility/common-components';
+import { calculateTimeDifference } from '../../utility/common-functions';
 import type { ICommodityFormResponse } from '@/types/index';
 
 interface IGridBodyItemProps {

@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 
 import { Table, TableContainer, VStack } from '@chakra-ui/react';
-import {
-  legendItems,
-  legendItemsDark,
-} from '@/components/utility/common-components';
-import { compareNumbers } from '@/components/utility/common-functions';
+import { legendItems, legendItemsDark } from '../utility/common-components';
+import { compareNumbers } from '../utility/common-functions';
 import {
   FormResponseHeading,
   GridHeadingsMobile,
