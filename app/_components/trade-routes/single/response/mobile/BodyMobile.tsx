@@ -230,7 +230,7 @@ const ResponseBody = ({
                 >
                   <Icon as={FontAwesomeIcon} icon={faRightLong} size="xs" />
                   <Text fontStyle="italic" as="span" fontSize="xs">
-                    {`${Math.round(data.buyFromStationDto.arrivalDistance)} ls`}
+                    {`${Math.round(data.sellToStationDto.arrivalDistance)} ls`}
                   </Text>
                   <RenderStationTypeIcon
                     station={data.sellToStationDto}
@@ -292,7 +292,7 @@ const ResponseBody = ({
       fontSize="sm"
       flexFlow="column"
       onClick={() => setShowItemCard(!showItemCard)}
-      _odd={{
+      _even={{
         background: `${GetColor('grid-accent')}`,
       }}
       borderRadius="md"
