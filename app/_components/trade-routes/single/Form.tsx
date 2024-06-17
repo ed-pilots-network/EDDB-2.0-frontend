@@ -390,8 +390,9 @@ const Form: React.FC<FormProps> = ({
           Find Routes
         </Button>
         <Button
+          size="sm"
           type="button"
-          variant="submit"
+          variant="outline"
           id="submit-temp"
           isLoading={isLoading}
           onClick={tempSubmitHandler}
