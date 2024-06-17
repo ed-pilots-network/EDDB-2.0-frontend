@@ -57,14 +57,6 @@ const ResponseBody = ({
   const selectTextColorAccent = isDark ? 'blue.4' : 'brown.5';
   const selectTextColorStrong = isDark ? 'orange.3' : 'brown.5';
 
-  const calcMaxTrades = (supply: number, demand: number) => {
-    const supplyRatioToCargo = Math.round(supply / cargoCapacity);
-    const demandRatioToCargo = Math.round(demand / cargoCapacity);
-    const min = Math.min(supplyRatioToCargo, demandRatioToCargo);
-    if (min > 1) return `${min} trades`;
-    return `${min} trade`;
-  };
-
   const toggleItemCard = () => (
     <Box overflow="hidden" width="100%" boxShadow="2xl" roundedTop="md">
       <Card
@@ -83,21 +75,9 @@ const ResponseBody = ({
               padding={4}
               justifyContent="center"
               animation={`${expand} 0.2s linear`}
+              as={GridItem}
             >
-              <HStack>
-                <Text
-                  className={orbitron.className}
-                  fontWeight={700}
-                  letterSpacing={0.5}
-                  color={selectTextColorAccent}
-                >
-                  Max Trades:{' '}
-                </Text>
-                <Text color={selectTextColorAccent}>
-                  {calcMaxTrades(data.stock, data.demand)}
-                </Text>
-              </HStack>
-              <HStack>
+              <HStack width="max-content">
                 <Text
                   className={orbitron.className}
                   fontWeight={700}
@@ -127,6 +107,7 @@ const ResponseBody = ({
             <HStack
               backgroundColor={selectBgColorAlt}
               justifyContent="space-between"
+              as={GridItem}
             >
               <VStack
                 alignItems="start"
@@ -189,6 +170,7 @@ const ResponseBody = ({
               justifyContent="center"
               padding={4}
               animation={`${expand} 0.2s linear`}
+              as={GridItem}
             >
               <HStack>
                 <Text

@@ -6,6 +6,7 @@ import { faRightLong } from '@fortawesome/free-solid-svg-icons';
 import { formatThousands } from '@/app/_hooks/textFormatting';
 import {
   Box,
+  Button,
   Card,
   CardBody,
   Flex,
@@ -57,46 +58,34 @@ const ResponseBody = ({
   const selectTextColorAccent = isDark ? 'blue.3' : 'brown.5';
   const selectTextColorStrong = isDark ? 'orange.3' : 'brown.5';
 
-  const calcMaxTrades = (supply: number, demand: number) => {
-    const supplyRatioToCargo = Math.round(supply / cargoCapacity);
-    const demandRatioToCargo = Math.round(demand / cargoCapacity);
-    const min = Math.min(supplyRatioToCargo, demandRatioToCargo);
-    if (min > 1) return `${min} trades`;
-    return `${min} trade`;
-  };
-
   const toggleItemCard = () => (
-    <Box overflow="hidden" width="100%" boxShadow="2xl" roundedTop="md">
+    <Box width="100%" boxShadow="2xl" roundedTop="md">
       <Card
         variant="unstyled"
         bg="inherit"
         direction="row"
-        fontSize="xs"
+        fontSize={{ base: 'xs', sm: 'sm' }}
         width="100%"
         backgroundColor={selectBgColor}
+        overflowX="auto"
       >
         <CardBody lineHeight={2}>
           <Grid
-            gridTemplateColumns={'1fr'}
+            gridTemplateColumns={{ base: '1fr', md: '2fr 2fr' }}
             gridTemplateRows={'repreat(1fr)'}
-            width="100%"
             animation={`${expand} 0.2s linear`}
           >
-            <VStack alignItems="start" padding={2}>
-              <HStack alignItems="baseline" as={GridItem}>
-                <Text
-                  className={orbitron.className}
-                  fontWeight={700}
-                  letterSpacing={0.5}
-                  color={selectTextColorAccent}
-                >
-                  Max Trades:{' '}
-                </Text>
-                <Text color={selectTextColorAccent} fontSize="sm">
-                  {calcMaxTrades(data.stock, data.demand)}
-                </Text>
-              </HStack>
-              <HStack alignItems="baseline" as={GridItem}>
+            <Box
+              alignItems="start"
+              padding={2}
+              as={GridItem}
+              colSpan={{ base: 1, md: 2 }}
+              gap={2}
+              display="flex"
+              flexFlow={{ base: 'column', md: 'row' }}
+              justifyContent={{ base: 'left', md: 'center' }}
+            >
+              <HStack alignItems="baseline">
                 <Text
                   className={orbitron.className}
                   fontWeight={700}
@@ -105,10 +94,9 @@ const ResponseBody = ({
                 >
                   Profit Per:{' '}
                 </Text>
-                <Text
-                  color={selectTextColorAccent}
-                  fontSize="sm"
-                >{`${formatThousands(data.profit)} cr`}</Text>
+                <Text color={selectTextColorAccent}>{`${formatThousands(
+                  data.profit,
+                )} cr`}</Text>
               </HStack>
               <HStack alignItems="baseline" as={GridItem}>
                 <Text
@@ -123,27 +111,30 @@ const ResponseBody = ({
                   {data.commodityDto.displayName}
                 </Text>
               </HStack>
-            </VStack>
-            <VStack alignItems="start" bg={selectBgColorAlt} padding={2}>
+            </Box>
+            <VStack
+              alignItems="start"
+              bg={selectBgColorAlt}
+              padding={2}
+              as={GridItem}
+              width="100%"
+            >
               <Text
                 className={orbitron.className}
                 fontWeight={700}
                 letterSpacing={0.5}
                 color={selectTextColorStrong}
-                as={GridItem}
                 marginX="auto"
               >
                 From
               </Text>
-              <HStack as={GridItem}>
+              <HStack overflowX="auto">
                 <Link
                   as={NextLink}
                   color={selectTextColorStrong}
                   fontWeight={700}
-                  fontSize="sm"
                   href="#"
                   whiteSpace="nowrap"
-                  overflowX="hidden"
                 >
                   {truncateString(data.buyFromStationDto.system.name, 20)}
                 </Link>
@@ -151,11 +142,14 @@ const ResponseBody = ({
                   color={GetColor('accent-text')}
                   href="#"
                   display="flex"
-                  fontSize="sm"
                   gap={2}
                   whiteSpace="nowrap"
-                  overflowX="hidden"
+                  alignItems="baseline"
                 >
+                  <Icon as={FontAwesomeIcon} icon={faRightLong} size="xs" />
+                  <Text fontStyle="italic" as="span" fontSize="xs">
+                    {`${Math.round(data.buyFromStationDto.arrivalDistance)} ls`}
+                  </Text>
                   <RenderStationTypeIcon
                     station={data.buyFromStationDto}
                     isDark={isDark}
@@ -163,7 +157,7 @@ const ResponseBody = ({
                   {truncateString(data.buyFromStationDto.name, 20)}
                 </Link>
               </HStack>
-              <HStack as={GridItem}>
+              <HStack>
                 <HStack alignItems="baseline">
                   <Text
                     className={orbitron.className}
@@ -173,13 +167,12 @@ const ResponseBody = ({
                   >
                     Supply:{' '}
                   </Text>
-                  <Text
-                    color={selectTextColorAccent}
-                    fontSize="sm"
-                  >{`${formatThousands(data.stock)} units`}</Text>
+                  <Text color={selectTextColorAccent}>{`${formatThousands(
+                    data.stock,
+                  )} units`}</Text>
                 </HStack>
               </HStack>
-              <HStack alignItems="baseline" as={GridItem}>
+              <HStack alignItems="baseline">
                 <Text
                   className={orbitron.className}
                   fontWeight={700}
@@ -188,45 +181,42 @@ const ResponseBody = ({
                 >
                   Buy Price:{' '}
                 </Text>
-                <Text
-                  color={selectTextColorAccent}
-                  fontSize="sm"
-                >{`${formatThousands(data.buyPrice)} cr`}</Text>
+                <Text color={selectTextColorAccent}>{`${formatThousands(
+                  data.buyPrice,
+                )} cr`}</Text>
                 <Text
                   className={orbitron.className}
                   fontWeight={700}
                   letterSpacing={0.5}
                   color={selectTextColorAccent}
+                  fontSize="xs"
                 >
                   Updated:
                 </Text>
-                <Text color={selectTextColorAccent} fontSize="sm">
+                <Text color={selectTextColorAccent} fontSize="xs">
                   {calculateTimeDifference(
                     data.buyFromStationDto.marketUpdateAt,
                   )}
                 </Text>
               </HStack>
             </VStack>
-            <VStack alignItems="start" padding={2}>
+            <VStack alignItems="start" padding={2} width="100%" as={GridItem}>
               <Text
                 className={orbitron.className}
                 fontWeight={700}
                 letterSpacing={0.5}
                 color={selectTextColorStrong}
-                as={GridItem}
                 marginX="auto"
               >
                 To
               </Text>
-              <HStack as={GridItem}>
+              <HStack>
                 <Link
                   as={NextLink}
                   color={selectTextColorStrong}
                   fontWeight={700}
-                  fontSize="sm"
                   href="#"
                   whiteSpace="nowrap"
-                  overflowX="hidden"
                 >
                   {truncateString(data.sellToStationDto.system.name, 20)}
                 </Link>
@@ -234,11 +224,14 @@ const ResponseBody = ({
                   color={GetColor('accent-text')}
                   href="#"
                   display="flex"
-                  fontSize="sm"
                   gap={2}
                   whiteSpace="nowrap"
-                  overflowX="hidden"
+                  alignItems="baseline"
                 >
+                  <Icon as={FontAwesomeIcon} icon={faRightLong} size="xs" />
+                  <Text fontStyle="italic" as="span" fontSize="xs">
+                    {`${Math.round(data.buyFromStationDto.arrivalDistance)} ls`}
+                  </Text>
                   <RenderStationTypeIcon
                     station={data.sellToStationDto}
                     isDark={isDark}
@@ -246,7 +239,7 @@ const ResponseBody = ({
                   {truncateString(data.sellToStationDto.name, 20)}
                 </Link>
               </HStack>
-              <HStack alignItems="baseline" as={GridItem}>
+              <HStack alignItems="baseline">
                 <Text
                   className={orbitron.className}
                   fontWeight={700}
@@ -255,16 +248,11 @@ const ResponseBody = ({
                 >
                   Demand:{' '}
                 </Text>
-                <Text
-                  color={selectTextColorAccent}
-                  fontSize="sm"
-                >{`${formatThousands(data.demand)} units`}</Text>
+                <Text color={selectTextColorAccent}>{`${formatThousands(
+                  data.demand,
+                )} units`}</Text>
               </HStack>
-              <HStack
-                alignItems="baseline"
-                as={GridItem}
-                minWidth="max-content"
-              >
+              <HStack alignItems="baseline" minWidth="max-content">
                 <Text
                   className={orbitron.className}
                   fontWeight={700}
@@ -273,43 +261,25 @@ const ResponseBody = ({
                 >
                   Sell Price:{' '}
                 </Text>
-                <Text
-                  color={selectTextColorAccent}
-                  fontSize="sm"
-                >{`${formatThousands(data.sellPrice)} cr`}</Text>
+                <Text color={selectTextColorAccent}>{`${formatThousands(
+                  data.sellPrice,
+                )} cr`}</Text>
                 <Text
                   className={orbitron.className}
                   fontWeight={700}
                   letterSpacing={0.5}
                   color={selectTextColorAccent}
+                  fontSize="xs"
                 >
                   Updated:
                 </Text>
-                <Text color={selectTextColorAccent} fontSize="sm">
+                <Text color={selectTextColorAccent} fontSize="xs">
                   {calculateTimeDifference(
                     data.sellToStationDto.marketUpdateAt,
                   )}
                 </Text>
               </HStack>
             </VStack>
-            {/* <HStack */}
-            {/*   backgroundColor={selectBgColorAlt} */}
-            {/*   justifyContent="space-between" */}
-            {/* > */}
-            {/*   <HStack */}
-            {/*     alignItems="start" */}
-            {/*     padding={4} */}
-            {/*     animation={`${expand} 0.2s linear`} */}
-            {/*   ></HStack> */}
-            {/*   <Box */}
-            {/*     borderTop={`75px solid`} */}
-            {/*     borderTopColor={selectBgColor} */}
-            {/*     borderLeft={`55px solid`} */}
-            {/*     borderLeftColor={selectBgColorAlt} */}
-            {/*     borderBottom={`75px solid`} */}
-            {/*     borderBottomColor={selectBgColor} */}
-            {/*   /> */}
-            {/* </HStack> */}
           </Grid>
         </CardBody>
       </Card>
@@ -329,13 +299,14 @@ const ResponseBody = ({
       borderColor={GetColor('border')}
       border={showItemCard ? `1px solid` : 'none'}
       overflowX="auto"
+      boxShadow="md"
     >
       <HStack>
         <Grid
-          gridTemplateColumns={{ base: '70px 2fr', md: '70px 2fr 1fr' }}
+          gridTemplateColumns={{ base: '70px 2fr', md: '70px 2fr 100px' }}
           gridTemplateRows={'1fr'}
           rowGap="1"
-          paddingY={4}
+          paddingY={{ base: 2, md: 4 }}
           paddingX={2}
           width="100%"
         >
@@ -368,9 +339,6 @@ const ResponseBody = ({
               >
                 {truncateString(data.buyFromStationDto.system.name, 12)}
               </Link>
-              {/* <Text fontStyle="italic" as="span"> */}
-              {/*   {`${Math.round(data.buyFromStationDto.arrivalDistance)} ls`} */}
-              {/* </Text> */}
               <Icon as={FontAwesomeIcon} icon={faRightLong} size="1x" />
               <Link
                 color={GetColor('accent-text')}
@@ -380,10 +348,6 @@ const ResponseBody = ({
                 whiteSpace="nowrap"
                 overflowX="hidden"
               >
-                {/* <RenderStationTypeIcon */}
-                {/*   station={data.buyFromStationDto} */}
-                {/*   isDark={isDark} */}
-                {/* /> */}
                 {truncateString(data.buyFromStationDto.name, 12)}
               </Link>
             </HStack>
@@ -406,9 +370,6 @@ const ResponseBody = ({
               >
                 {truncateString(data.sellToStationDto.system.name, 12)}
               </Link>
-              {/* <Text fontStyle="italic" as="span"> */}
-              {/*   {`${Math.round(data.sellToStationDto.arrivalDistance)} ls`} */}
-              {/* </Text> */}
               <Icon as={FontAwesomeIcon} icon={faRightLong} size="1x" />
               <Link
                 color={GetColor('accent-text')}
@@ -418,27 +379,38 @@ const ResponseBody = ({
                 whiteSpace="nowrap"
                 overflowX="hidden"
               >
-                {/* <RenderStationTypeIcon */}
-                {/*   station={data.sellToStationDto} */}
-                {/*   isDark={isDark} */}
-                {/* /> */}
                 {truncateString(data.sellToStationDto.name, 12)}
               </Link>
             </HStack>
           </HStack>
-          <GridItem
-            justifyContent="center"
-            display={{ base: 'none', md: 'flex' }}
+          <Button
+            display={{ base: 'inline', md: 'none' }}
+            as={GridItem}
+            colSpan={2}
+            textAlign="center"
+            paddingTop={2}
+            variant="unstyled"
+          >
+            <GridRowExpandIcon
+              isExpanded={showItemCard}
+              setIsExpanded={setShowItemCard}
+              size={8}
+            />
+          </Button>
+          <Button
+            display={{ base: 'none', md: 'block' }}
             position="absolute"
-            right={28}
+            right={20}
             marginTop={4}
+            variant="unstyled"
+            as={GridItem}
           >
             <GridRowExpandIcon
               isExpanded={showItemCard}
               setIsExpanded={setShowItemCard}
               size={12}
             />
-          </GridItem>
+          </Button>
         </Grid>
       </HStack>
       {showItemCard && toggleItemCard()}
