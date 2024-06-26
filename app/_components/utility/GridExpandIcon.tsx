@@ -23,6 +23,7 @@ const GridRowExpandIcon = ({
       size="xs"
       onClick={() => setIsExpanded(!isExpanded)}
       variant="unstyled"
+      title="expand"
     >
       {isExpanded ? (
         <ChevronUpIcon

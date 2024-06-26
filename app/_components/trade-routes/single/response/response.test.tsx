@@ -1,12 +1,12 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import SingleTradeResponseDesktop from './desktop/ResponseDesktop';
+import SingleTradeResponseMobile from './mobile/ResponseMobile';
 import type { FormResponseProps } from '../Schema';
 import {
   ZodCommodityNameApiType,
   ZodStationDtoApiType,
   ZodSystemDtoApiType,
 } from '@/app/_types';
-import { Suspense } from 'react';
 
 const mockedCommodity: ZodCommodityNameApiType = {
   commodityName: 'gold',
@@ -108,12 +108,10 @@ const mockedResults: FormResponseProps[] = [
   },
 ];
 
-describe('Single Trade Form Response', () => {
+describe('Single Trade Form Response Desktop', () => {
   beforeEach(async () => {
     const Component = () => (
-      <Suspense>
-        <SingleTradeResponseDesktop results={mockedResults} cargoCapacity={1} />
-      </Suspense>
+      <SingleTradeResponseDesktop results={mockedResults} cargoCapacity={1} />
     );
 
     render(<Component />);
@@ -122,7 +120,6 @@ describe('Single Trade Form Response', () => {
   afterEach(() => cleanup());
 
   it('renders with default sort of profit', () => {
-    // const headings = screen.getAllByRole('p');
     const distance = screen.getAllByText('ly', { exact: false });
     const profit = screen.getAllByText('cr', { exact: false });
 
@@ -130,29 +127,155 @@ describe('Single Trade Form Response', () => {
     expect(profit[0]).toHaveTextContent('2 cr');
   });
 
-  it('can be sorted by distance', () => {
-    // const headings = screen.getAllByRole('p');
+  it('results can be sorted by distance', async () => {
+    // ARRANGE
+    const distance = screen.getAllByText('ly', { exact: false });
+    const sortButton = screen.getByRole('button', { name: 'Distance' });
+
+    // ASSERT
+    expect(distance[0]).toHaveTextContent('20 ly');
+
+    // ACT
+    fireEvent.click(sortButton);
+
+    // ASSERT
+    expect(distance[0]).toHaveTextContent('10 ly');
+  });
+
+  it('results can be expanded', async () => {
+    const expandButtons = screen.getAllByTitle('expand');
+    const firstItemExpandButton = expandButtons[0];
+
+    // ACT
+    fireEvent.click(firstItemExpandButton);
+
+    // ASSERT
+    const firstCardElement = screen.getByText('Profit Per:', { exact: false });
+    expect(firstCardElement).toBeInTheDocument();
+
+    // ACT
+    fireEvent.click(firstItemExpandButton);
+    expect(firstCardElement).not.toBeInTheDocument();
+  });
+
+  it('expanded results card shows proper data', async () => {
+    const expandButtons = screen.getAllByTitle('expand');
+    const firstItemExpandButton = expandButtons[0];
+
+    // ASSERT
+    expect(firstItemExpandButton).toBeInTheDocument();
+
+    // ACT
+    fireEvent.click(firstItemExpandButton);
+
+    // ASSERT
+    const renderTotalProfit = screen.getAllByText('cr', { exact: false });
+    expect(renderTotalProfit[0]).toHaveTextContent('2 cr');
+
+    const renderTotalSupply = screen.getAllByText('units', { exact: false });
+    expect(renderTotalSupply[0]).toHaveTextContent('100 units');
+  });
+
+  it('results card updates on sorting change', async () => {
+    const expandButtons = screen.getAllByTitle('expand');
+    const firstItemExpandButton = expandButtons[0];
+    const sortButton = screen.getByRole('button', { name: 'Distance' });
+
+    // ACT
+    fireEvent.click(sortButton);
+    fireEvent.click(firstItemExpandButton);
+
+    // ASSERT
+    const renderTotalProfit = screen.getAllByText('cr', { exact: false });
+    expect(renderTotalProfit[0]).toHaveTextContent('1 cr');
+
+    const renderTotalSupply = screen.getAllByText('units', { exact: false });
+    expect(renderTotalSupply[0]).toHaveTextContent('100 units');
+  });
+});
+
+describe('Single Trade Form Response Mobile', () => {
+  beforeEach(async () => {
+    const Component = () => (
+      <SingleTradeResponseMobile results={mockedResults} cargoCapacity={1} />
+    );
+
+    render(<Component />);
+  });
+
+  afterEach(() => cleanup());
+
+  it('renders with default sort of profit', () => {
     const distance = screen.getAllByText('ly', { exact: false });
     const profit = screen.getAllByText('cr', { exact: false });
-    // const sortButton = screen.getByRole('button');
 
     expect(distance[0]).toHaveTextContent('20 ly');
     expect(profit[0]).toHaveTextContent('2 cr');
   });
 
-  // it('results can be sorted by price', async () => {
-  //   // ARRANGE
-  //   const lowestPriceTableRow = screen.getByText('CR 49,184');
-  //   const table = lowestPriceTableRow.parentNode;
-  //   const sortButton = screen.getByRole('button', { name: 'Sell Price' });
-  //
-  //   // ASSERT
-  //   expect(table?.firstChild).toHaveTextContent('CR 49,184');
-  //
-  //   // ACT
-  //   fireEvent.click(sortButton);
-  //
-  //   // ASSERT
-  //   expect(table?.firstChild).toHaveTextContent('CR 51,234');
-  // });
+  it('results can be sorted by distance', async () => {
+    // ARRANGE
+    const distance = screen.getAllByText('ly', { exact: false });
+    const sortButton = screen.getByRole('button', { name: 'Distance' });
+
+    // ASSERT
+    expect(distance[0]).toHaveTextContent('20 ly');
+
+    // ACT
+    fireEvent.click(sortButton);
+
+    // ASSERT
+    expect(distance[0]).toHaveTextContent('10 ly');
+  });
+
+  it('results can be expanded', async () => {
+    const expandButtons = screen.getAllByTitle('expand');
+    const firstItemExpandButton = expandButtons[0];
+
+    // ACT
+    fireEvent.click(firstItemExpandButton);
+
+    // ASSERT
+    const firstCardElement = screen.getByText('Profit Per:', { exact: false });
+    expect(firstCardElement).toBeInTheDocument();
+
+    // ACT
+    fireEvent.click(firstItemExpandButton);
+    expect(firstCardElement).not.toBeInTheDocument();
+  });
+
+  it('expanded results card shows proper data', async () => {
+    const expandButtons = screen.getAllByTitle('expand');
+    const firstItemExpandButton = expandButtons[0];
+
+    // ASSERT
+    expect(firstItemExpandButton).toBeInTheDocument();
+
+    // ACT
+    fireEvent.click(firstItemExpandButton);
+
+    // ASSERT
+    const renderTotalProfit = screen.getAllByText('cr', { exact: false });
+    expect(renderTotalProfit[0]).toHaveTextContent('2 cr');
+
+    const renderTotalSupply = screen.getAllByText('units', { exact: false });
+    expect(renderTotalSupply[0]).toHaveTextContent('100 units');
+  });
+
+  it('results card updates on sorting change', async () => {
+    const expandButtons = screen.getAllByTitle('expand');
+    const firstItemExpandButton = expandButtons[0];
+    const sortButton = screen.getByRole('button', { name: 'Distance' });
+
+    // ACT
+    fireEvent.click(sortButton);
+    fireEvent.click(firstItemExpandButton);
+
+    // ASSERT
+    const renderTotalProfit = screen.getAllByText('cr', { exact: false });
+    expect(renderTotalProfit[0]).toHaveTextContent('1 cr');
+
+    const renderTotalSupply = screen.getAllByText('units', { exact: false });
+    expect(renderTotalSupply[0]).toHaveTextContent('100 units');
+  });
 });

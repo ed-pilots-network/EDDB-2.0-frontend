@@ -226,10 +226,14 @@ const ResponseBody = ({
       fontSize="sm"
       flexFlow="column"
       onClick={() => setShowItemCard(!showItemCard)}
-      _odd={{
+      _even={{
         background: `${GetColor('grid-accent')}`,
-        borderRadius: 'md',
       }}
+      borderRadius="md"
+      borderColor={GetColor('border')}
+      border={showItemCard ? `1px solid` : 'none'}
+      overflowX="auto"
+      boxShadow="md"
     >
       <HStack>
         <Grid
