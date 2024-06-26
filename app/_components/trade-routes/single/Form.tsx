@@ -32,14 +32,12 @@ interface FormProps {
   onSubmitHandler: SubmitHandler<FormSubmitProps>;
   isLoading: boolean;
   commodities: ICommodity[] | null;
-  tempSubmitHandler: () => void;
 }
 
 const Form: React.FC<FormProps> = ({
   onSubmitHandler,
   isLoading,
   commodities,
-  tempSubmitHandler,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
@@ -388,16 +386,6 @@ const Form: React.FC<FormProps> = ({
           isLoading={isLoading}
         >
           Find Routes
-        </Button>
-        <Button
-          size="sm"
-          type="button"
-          variant="outline"
-          id="submit-temp"
-          isLoading={isLoading}
-          onClick={tempSubmitHandler}
-        >
-          Test Route
         </Button>
         <ExpandIcon isExpanded={isExpanded} setIsExpanded={setIsExpanded} />
       </HStack>

@@ -61,28 +61,6 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     return params.toString().replaceAll(',', '&');
   }
 
-  // TODO: delete this after finishing the form response
-  const handleTempSubmit = async () => {
-    setIsLoading(true);
-    setIsSubmitted(false);
-
-    const tempParams =
-      'sellToSystemName=Sol&commodityDisplayNames=Gold&maxRouteDistance=50&maxPriceAgeHours=72&cargoCapacity=500&availableCredits=0&maxLandingPadSize=LARGE&maxArrivalDistance=1000&includeFleetCarriers=false&includeSurfaceStations=false&includeOdyssey=false';
-    const queryUrl = `trade/locate-trade/single?${tempParams}`;
-    setRequestUrl(queryUrl);
-    setCargoCapacity(500);
-    if (requestUrl !== '') await responseMutate();
-
-    if (responseData) {
-      console.log("submitted! here's the response", responseData);
-    }
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSubmitted(true);
-    }, 700);
-  };
-
   const handleSubmit = async (data: FormSubmitProps) => {
     setIsLoading(true);
     setIsSubmitted(false);
@@ -141,7 +119,6 @@ const PageClient = ({ commodities }: IPageClientProps) => {
       >
         <Form
           onSubmitHandler={handleSubmit}
-          tempSubmitHandler={handleTempSubmit}
           isLoading={isLoading}
           commodities={commodities}
         />
