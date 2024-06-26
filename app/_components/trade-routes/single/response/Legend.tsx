@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { Flex, HStack, Heading, Image, Text, VStack } from '@chakra-ui/react';
-import PageHeading from '@/components/utility/pageHeading';
 import {
   legendItems,
   legendItemsDark,
-} from '@/components/utility/common-components';
+} from '../../../utility/common-components';
 import useColorMode from '@/app/_hooks/useColorMode';
+import PageHeading from '../../../utility/pageHeading';
 
 const ResponseLegend = () => {
   const { isDark } = useColorMode();

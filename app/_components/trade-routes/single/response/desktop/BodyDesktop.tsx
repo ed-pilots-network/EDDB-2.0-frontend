@@ -22,7 +22,7 @@ import GetColor from '@/app/_hooks/colorSelector';
 import {
   RenderStationTypeIcon,
   truncateString,
-} from '@/components/utility/common-components';
+} from '@/app/_components/utility/common-components';
 import useColorMode from '@/app/_hooks/useColorMode';
 import { calculateTimeDifference } from '@/app/_components/utility/common-functions';
 import GridRowExpandIcon from '@/app/_components/utility/GridExpandIcon';
