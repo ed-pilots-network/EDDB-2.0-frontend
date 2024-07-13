@@ -43,7 +43,7 @@ export interface StationDtoApi {
   requireOdyssey: boolean;
   fleetCarrier: boolean;
   maxLandingPadSize: LandingPadEnumApi;
-  marketUpdateAt: string;
+  marketUpdatedAt: string;
 }
 
 export interface SingleTradeAPIResponse {

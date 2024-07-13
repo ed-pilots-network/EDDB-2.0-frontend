@@ -151,7 +151,7 @@ const ResponseBody = ({
                   </Text>
                   <Text color={selectTextColorAccent}>
                     {calculateTimeDifference(
-                      data.buyFromStationDto.marketUpdateAt,
+                      data.buyFromStationDto.marketUpdatedAt,
                     )}
                   </Text>
                 </HStack>
@@ -209,7 +209,7 @@ const ResponseBody = ({
                 </Text>
                 <Text color={selectTextColorAccent}>
                   {calculateTimeDifference(
-                    data.sellToStationDto.marketUpdateAt,
+                    data.sellToStationDto.marketUpdatedAt,
                   )}
                 </Text>
               </HStack>

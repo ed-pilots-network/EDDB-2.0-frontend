@@ -11,7 +11,7 @@ export const ZodStationDtoApiConst = z.object({
   requireOdyssey: z.boolean(),
   fleetCarrier: z.boolean(),
   maxLandingPadSize: ZodLandingPadEnumConst,
-  marketUpdateAt: z.string(),
+  marketUpdatedAt: z.string(),
 });
 
 export type ZodStationDtoApiType = z.infer<typeof ZodStationDtoApiConst>;
