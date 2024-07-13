@@ -102,10 +102,6 @@ const Form: React.FC<FormProps> = ({
     onSubmitHandler(data);
   };
 
-  // TODO: cargoCapacity needs to be required and have a default
-  // same goes for maxRouteDistance and maxArrivalDistance
-  // will need to shuffle these inputs out of the collapse
-  // radio options need to return false if not selected
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid

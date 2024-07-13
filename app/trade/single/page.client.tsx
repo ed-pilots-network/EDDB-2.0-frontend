@@ -1,7 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, HStack, Flex, Text } from '@chakra-ui/react';
+import {
+  Box,
+  HStack,
+  Flex,
+  Text,
+  useMediaQuery,
+  Fade,
+  Alert,
+  AlertIcon,
+} from '@chakra-ui/react';
 import Form from '@/components/trade-routes/single/Form';
 import GetColor from '@/app/_hooks/colorSelector';
 import PageHeading from '@/app/_components/utility/pageHeading';
@@ -10,7 +19,9 @@ import {
   FormResponseProps,
   FormSubmitProps,
 } from '@/app/_components/trade-routes/single/Schema';
-import { ICommodity } from '@/app/_types';
+import SingleTradeResponseDesktop from '@/app/_components/trade-routes/single/response/desktop/ResponseDesktop';
+import SingleTradeResponseMobile from '@/app/_components/trade-routes/single/response/mobile/ResponseMobile';
+import type { ICommodity } from '@/app/_types';
 
 interface IPageClientProps {
   commodities: ICommodity[] | null;
@@ -18,7 +29,10 @@ interface IPageClientProps {
 
 const PageClient = ({ commodities }: IPageClientProps) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [requestUrl, setRequestUrl] = useState('');
+  const [cargoCapacity, setCargoCapacity] = useState(1);
+  const [isLarge] = useMediaQuery('(min-width: 1024px)');
 
   const {
     data: responseData,
@@ -26,7 +40,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     mutate: responseMutate,
   } = useGetData<FormResponseProps[]>(requestUrl);
 
-  // TODO: this is messy. can it be made universal and extracted?
+  // this is messy. can it be made universal and extracted?
   function encodeQueryString(obj: FormSubmitProps) {
     const params: string[] = [];
     Object.entries(obj).forEach(([k, v]) => {
@@ -49,19 +63,41 @@ const PageClient = ({ commodities }: IPageClientProps) => {
 
   const handleSubmit = async (data: FormSubmitProps) => {
     setIsLoading(true);
+    setIsSubmitted(false);
 
+    // includeOdyssey isn't being filtered atm
     const queryParams = encodeQueryString(data);
     const queryUrl = `trade/locate-trade/single?${queryParams}`;
     setRequestUrl(queryUrl);
-    if (requestUrl !== '') await responseMutate();
+    setCargoCapacity(data.cargoCapacity);
+    if (requestUrl !== '') {
+      await responseMutate();
+    }
 
-    // TODO: we'll use availableCredits with cargoCapacity to present overall profit
-    // once the response returns with profit per unit
-    // includeOdyssey isn't being filtered atm
+    setTimeout(() => {
+      setIsLoading(false);
+      setIsSubmitted(true);
+    }, 700);
+  };
 
-    const res = responseError ?? responseData;
-    console.log("submitted! here's the response", res);
-    setIsLoading(false);
+  const checkBreakpointBeforeShowingResponse = () => {
+    if (isLarge)
+      return (
+        <Fade in={responseData.length > 0} style={{ width: '100%' }}>
+          <SingleTradeResponseDesktop
+            results={responseData}
+            cargoCapacity={cargoCapacity}
+          />
+        </Fade>
+      );
+    return (
+      <Fade in={responseData.length > 0} style={{ width: '100%' }}>
+        <SingleTradeResponseMobile
+          results={responseData}
+          cargoCapacity={cargoCapacity}
+        />
+      </Fade>
+    );
   };
 
   return (
@@ -87,6 +123,19 @@ const PageClient = ({ commodities }: IPageClientProps) => {
           commodities={commodities}
         />
       </Box>
+      {responseData && responseData.length === 0 && isSubmitted && (
+        <Alert status="warning" borderRadius="md">
+          <AlertIcon />
+          No results found!
+        </Alert>
+      )}
+      {responseError && isSubmitted && (
+        <Alert status="error">
+          <AlertIcon />
+          Failed to fetch data!
+        </Alert>
+      )}
+      {responseData?.length > 0 && checkBreakpointBeforeShowingResponse()}
     </Flex>
   );
 };

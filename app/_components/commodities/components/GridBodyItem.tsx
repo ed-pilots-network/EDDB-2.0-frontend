@@ -3,8 +3,9 @@ import React from 'react';
 import { formatThousands } from '@/app/_hooks/textFormatting';
 import { GridItem, SimpleGrid, Text } from '@chakra-ui/react';
 import GetColor from '@/app/_hooks/colorSelector';
-import { calculateTimeDifference, renderStationTypeIcon } from '../helpers';
-import { ICommodityFormResponse } from '@/types/index';
+import { RenderStationTypeIcon } from '../../utility/common-components';
+import { calculateTimeDifference } from '../../utility/common-functions';
+import type { ICommodityFormResponse } from '@/types/index';
 
 interface IGridBodyItemProps {
   isDark: boolean;
@@ -53,7 +54,7 @@ const GridBodyItem: React.FC<IGridBodyItemProps> = ({
       marginY="auto"
       maxWidth="90%"
     >
-      {renderStationTypeIcon(commodity.station, isDark)}
+      <RenderStationTypeIcon station={commodity.station} isDark={isDark} />
       <Text overflowX="scroll" whiteSpace="nowrap">
         {commodity.station.name}
       </Text>

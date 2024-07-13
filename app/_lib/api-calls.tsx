@@ -68,7 +68,7 @@ const useGetMockSubmitFormClient = (queryString: string) => {
 };
 
 interface SWR {
-  error: any | undefined;
+  error: Error | undefined;
   isLoading: boolean;
   mutate: KeyedMutator<any>;
 }
