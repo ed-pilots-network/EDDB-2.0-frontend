@@ -56,7 +56,7 @@ const mockedBuyStation: ZodStationDtoApiType = {
   requireOdyssey: false,
   fleetCarrier: false,
   maxLandingPadSize: 'LARGE',
-  marketUpdateAt: now,
+  marketUpdatedAt: now,
 };
 
 const mockedSellStation: ZodStationDtoApiType = {
@@ -68,7 +68,7 @@ const mockedSellStation: ZodStationDtoApiType = {
   requireOdyssey: false,
   fleetCarrier: false,
   maxLandingPadSize: 'LARGE',
-  marketUpdateAt: now,
+  marketUpdatedAt: now,
 };
 
 const mockedBuyStation2: ZodStationDtoApiType = {
@@ -80,7 +80,7 @@ const mockedBuyStation2: ZodStationDtoApiType = {
   requireOdyssey: false,
   fleetCarrier: false,
   maxLandingPadSize: 'LARGE',
-  marketUpdateAt: now,
+  marketUpdatedAt: now,
 };
 
 const mockedResults: FormResponseProps[] = [
