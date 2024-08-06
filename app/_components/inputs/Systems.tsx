@@ -16,13 +16,19 @@ interface Props {
   placeholder?: string;
   disabled?: boolean;
   onChange?: (
-    e: ChangeEvent<HTMLSelectElement> | MultiValue<SelectGroup>,
+    e:
+      | ChangeEvent<HTMLSelectElement>
+      | MultiValue<SystemSelectGroup>
+      | SystemSelectGroup,
   ) => void;
 }
 
-interface SelectGroup extends OptionBase {
+export interface SystemSelectGroup extends OptionBase {
   label: string;
   value: string;
+  xCoordinate: number;
+  yCoordinate: number;
+  zCoordinate: number;
 }
 
 type FieldOptions = {
@@ -41,7 +47,9 @@ const getSystemName = async (lookupString: string) => {
   return res.json();
 };
 
-const loadOptions = async (inputValue: string): Promise<SelectGroup[] | []> => {
+const loadOptions = async (
+  inputValue: string,
+): Promise<SystemSelectGroup[] | []> => {
   if (inputValue.length < 3) {
     return [];
   }
@@ -51,12 +59,15 @@ const loadOptions = async (inputValue: string): Promise<SelectGroup[] | []> => {
 
     res = await getSystemName(inputValue);
 
-    const returnArr: SelectGroup[] = res.map((item: ISystem) => ({
+    const returnArr: SystemSelectGroup[] = res.map((item: ISystem) => ({
       value: item.eliteId,
       label: item.name,
+      xCoordinate: item.coordinate.x,
+      yCoordinate: item.coordinate.y,
+      zCoordinate: item.coordinate.z,
     }));
 
-    const returnArrFiltered = returnArr.filter((i: SelectGroup) =>
+    const returnArrFiltered = returnArr.filter((i: SystemSelectGroup) =>
       i.label.toLowerCase().includes(inputValue.toLowerCase()),
     );
 
@@ -88,7 +99,7 @@ const SystemsField = ({
       render={({
         field: { name, ref, value, onChange: internalOnChange, onBlur },
       }) => (
-        <AsyncSelect<SelectGroup, true, GroupBase<SelectGroup>>
+        <AsyncSelect<SystemSelectGroup, true, GroupBase<SystemSelectGroup>>
           cacheOptions
           isClearable
           loadingMessage={() => 'Searching...'}
