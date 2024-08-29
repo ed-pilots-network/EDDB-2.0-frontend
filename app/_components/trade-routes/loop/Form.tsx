@@ -48,11 +48,12 @@ const Form: React.FC<ComponentProps> = ({
     formState: { errors },
   } = useForm<FormProps>({
     defaultValues: {
-      cargoCapacity: 500,
+      minSupply: 10000,
+      minDemand: 10000,
       maxRouteDistance: 100,
       maxArrivalDistance: 1000,
-      includeOdyssey: false,
-      includeSurfaceStations: false,
+      includeOdyssey: true,
+      includeSurfaceStations: true,
       includeFleetCarriers: false,
     },
     resolver: zodResolver(FormSubmitSchema),
@@ -133,9 +134,9 @@ const Form: React.FC<ComponentProps> = ({
 
         <GridItem>
           <FormControl
-            isInvalid={!!(errors.cargoCapacity && errors.cargoCapacity.message)}
+            isInvalid={!!(errors.minSupply && errors.minSupply.message)}
           >
-            <FormLabel>Cargo Capacity</FormLabel>
+            <FormLabel>Min Supply</FormLabel>
             <Input
               type="number"
               variant="outline"
@@ -144,10 +145,31 @@ const Form: React.FC<ComponentProps> = ({
               _hover={{
                 borderColor: GetColor('border'),
               }}
-              {...register('cargoCapacity', { valueAsNumber: true })}
+              {...register('minSupply', { valueAsNumber: true })}
             />
             <FormErrorMessage>
-              {errors.cargoCapacity && errors.cargoCapacity.message}
+              {errors.minSupply && errors.minSupply.message}
+            </FormErrorMessage>
+          </FormControl>
+        </GridItem>
+
+        <GridItem>
+          <FormControl
+            isInvalid={!!(errors.minDemand && errors.minDemand.message)}
+          >
+            <FormLabel>Min Demand</FormLabel>
+            <Input
+              type="number"
+              variant="outline"
+              placeholder="Enter a number..."
+              borderColor={GetColor('border')}
+              _hover={{
+                borderColor: GetColor('border'),
+              }}
+              {...register('minDemand', { valueAsNumber: true })}
+            />
+            <FormErrorMessage>
+              {errors.minDemand && errors.minDemand.message}
             </FormErrorMessage>
           </FormControl>
         </GridItem>

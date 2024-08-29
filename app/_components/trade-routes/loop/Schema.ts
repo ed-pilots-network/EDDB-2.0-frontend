@@ -15,7 +15,8 @@ export const FormSchema = z.object({
     .optional()
     .transform((val) => Number(val) || 72),
   maxRouteDistance: z.number(),
-  cargoCapacity: z.number(),
+  minSupply: z.number(),
+  minDemand: z.number(),
   availableCredits: z
     .string()
     .optional()
