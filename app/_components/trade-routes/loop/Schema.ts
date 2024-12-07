@@ -17,10 +17,6 @@ export const FormSchema = z.object({
   maxRouteDistance: z.number(),
   minSupply: z.number(),
   minDemand: z.number(),
-  availableCredits: z
-    .string()
-    .optional()
-    .transform((val) => Number(val)),
   maxLandingPadSize: z.string().optional(),
   maxArrivalDistance: z.number(),
   includeFleetCarriers: z.boolean(),

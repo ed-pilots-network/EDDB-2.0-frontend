@@ -1,7 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, HStack, Flex, Text, Alert, AlertIcon } from '@chakra-ui/react';
+import {
+  Box,
+  HStack,
+  Flex,
+  Text,
+  useMediaQuery,
+  Alert,
+  AlertIcon,
+  Fade,
+} from '@chakra-ui/react';
 import Form from '@/components/trade-routes/loop/Form';
 import GetColor from '@/app/_hooks/colorSelector';
 import PageHeading from '@/app/_components/utility/pageHeading';
@@ -11,6 +20,8 @@ import {
   FormSubmitProps,
 } from '@/app/_components/trade-routes/loop/Schema';
 import type { ICommodity } from '@/app/_types';
+import LoopTradeResponseDesktop from '@/components/trade-routes/loop/response/desktop/ResponseDesktop';
+import LoopTradeResponseMobile from '@/components/trade-routes/loop/response/mobile/ResponseMobile';
 
 interface IPageClientProps {
   commodities: ICommodity[] | null;
@@ -21,7 +32,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [requestUrl, setRequestUrl] = useState('');
   // const [cargoCapacity, setCargoCapacity] = useState(1);
-  // const [isLarge] = useMediaQuery('(min-width: 1024px)');
+  const [isLarge] = useMediaQuery('(min-width: 1024px)');
 
   const {
     data: responseData,
@@ -69,6 +80,26 @@ const PageClient = ({ commodities }: IPageClientProps) => {
     }, 700);
   };
 
+  const checkBreakpointBeforeShowingResponse = () => {
+    if (isLarge)
+      return (
+        <Fade in={responseData.length > 0} style={{ width: '100%' }}>
+          <LoopTradeResponseDesktop
+            results={responseData}
+            cargoCapacity={cargoCapacity}
+          />
+        </Fade>
+      );
+    return (
+      <Fade in={responseData.length > 0} style={{ width: '100%' }}>
+        <LoopTradeResponseMobile
+          results={responseData}
+          cargoCapacity={cargoCapacity}
+        />
+      </Fade>
+    );
+  };
+
   return (
     <Flex flexDirection="column" gap="24px" width="100%">
       <HStack spacing={4}>
@@ -102,7 +133,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
           Failed to fetch data!
         </Alert>
       )}
-      {/* {responseData?.length > 0 && checkBreakpointBeforeShowingResponse()} */}
+      {responseData?.length > 0 && checkBreakpointBeforeShowingResponse()}
     </Flex>
   );
 };

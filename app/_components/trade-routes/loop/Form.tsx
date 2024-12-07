@@ -227,29 +227,6 @@ const Form: React.FC<ComponentProps> = ({
           <GridItem>
             <FormControl
               isInvalid={
-                !!(errors.availableCredits && errors.availableCredits.message)
-              }
-            >
-              <FormLabel>Available Credits</FormLabel>
-              <Input
-                type="number"
-                variant="outline"
-                placeholder="Enter a number..."
-                borderColor={GetColor('border')}
-                _hover={{
-                  borderColor: GetColor('border'),
-                }}
-                {...register('availableCredits')}
-              />
-              <FormErrorMessage>
-                {errors.availableCredits && errors.availableCredits.message}
-              </FormErrorMessage>
-            </FormControl>
-          </GridItem>
-
-          <GridItem>
-            <FormControl
-              isInvalid={
                 !!(errors.maxPriceAgeHours && errors.maxPriceAgeHours.message)
               }
             >
