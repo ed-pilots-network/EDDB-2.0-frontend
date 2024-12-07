@@ -31,7 +31,7 @@ const PageClient = ({ commodities }: IPageClientProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [requestUrl, setRequestUrl] = useState('');
-  // const [cargoCapacity, setCargoCapacity] = useState(1);
+  const [cargoCapacity] = useState(1);
   const [isLarge] = useMediaQuery('(min-width: 1024px)');
 
   const {
